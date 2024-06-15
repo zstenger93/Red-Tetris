@@ -8,6 +8,11 @@ describe("HomePage", () => {
         wrapper = mount(HomePage);
     });
 
+    it("loads successfully", () => {
+    // checks if the Vue instance is created
+    expect(wrapper.vm).toBeTruthy();
+    });
+
     it("initially shows only the 'Let's Play a Game' button", () => {
         expect(wrapper.find("button").text()).toContain("Let's Play a Game");
         expect(wrapper.findAll("button").length).toBe(1);
@@ -22,7 +27,7 @@ describe("HomePage", () => {
 
     it("shows multiplayer options when 'Multiplayer' is selected", async () => {
         await wrapper.find("button").trigger("click"); // Let's Play a Game' is clicked
-        await wrapper.findAll("button").at(1).trigger("click"); // Click on Multiplayer
+        await wrapper.findAll("button").at(1).trigger("click"); // click on Multiplayer
         expect(wrapper.text()).toContain("Tetris");
         expect(wrapper.text()).toContain("Tic-Tac-Toe");
     });
@@ -36,9 +41,9 @@ describe("HomePage", () => {
     });
 
     it("logs the selected option when a solo game option is selected", async () => {
-        console.log = jest.fn(); // Mock console.log
+        console.log = jest.fn(); // mock console.log
         await wrapper.find("button").trigger("click");
-        await wrapper.findAll("button").at(0).trigger("click"); // Click on Solo Tetris
+        await wrapper.findAll("button").at(0).trigger("click"); // click on Solo Tetris
         expect(console.log).toHaveBeenCalledWith("Option 1 selected");
     });
 });
