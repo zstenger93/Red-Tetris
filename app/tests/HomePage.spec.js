@@ -40,10 +40,21 @@ describe("HomePage", () => {
         expect(wrapper.text()).toContain("Multiplayer");
     });
 
-    it("logs the selected option when a solo game option is selected", async () => {
-        console.log = jest.fn(); // mock console.log
+    it("displays the SoloTetris template when a solo game option is selected", async () => {
+    await wrapper.find("button").trigger("click");
+    await wrapper.findAll("button").at(0).trigger("click");
+    expect(wrapper.findComponent({ name: 'SoloTetris' }).exists()).toBe(true);
+});
+
+    it("shows 'How to Play' option when 'Let's Play a Game' is clicked", async () => {
         await wrapper.find("button").trigger("click");
-        await wrapper.findAll("button").at(0).trigger("click"); // click on Solo Tetris
-        expect(console.log).toHaveBeenCalledWith("Option 1 selected");
+        expect(wrapper.text()).toContain("How to Play");
+    });
+    
+    it("navigates to 'How to Play' when the option is selected", async () => {
+        await wrapper.find("button").trigger("click");
+        await wrapper.findAll("button").at(2).trigger("click");
+        expect(wrapper.text()).not.toContain("Let's Play a Game");
+        expect(wrapper.text()).toContain("Back");
     });
 });
