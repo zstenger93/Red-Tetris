@@ -1,5 +1,2 @@
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-
-source ~/.nvm/nvm.sh
-
-nvm install node
+# RED_TETRIS
+![Background Image](/app/src/assets/background.png)
