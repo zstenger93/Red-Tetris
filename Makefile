@@ -7,4 +7,4 @@ install:
 
 
 run:
-	npm start
+	npm run serve
