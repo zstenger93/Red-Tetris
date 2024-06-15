@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <HomePage />
     <h2>Welcome to the game!</h2>
     <button @click="startGame">Start Game</button>
   </div>
@@ -7,9 +8,13 @@
 
 <script>
 import io from 'socket.io-client'
+import HomePage from './client/HomePage.vue'
 
 export default {
   name: 'App',
+  components: {
+    HomePage,
+  },
   data() {
     return {
       socket: null,
