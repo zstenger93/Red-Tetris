@@ -36,34 +36,42 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+
 export default {
     name: 'HomePage',
-    data() {
-        return {
-            showOptions: false,
-            showMultiplayerOptions: false,
+    setup() {
+        const showOptions = ref(false);
+        const showMultiplayerOptions = ref(false);
+
+        const toggleOptionsVisibility = () => {
+            showOptions.value = !showOptions.value;
         };
-    },
-    methods: {
-        toggleOptionsVisibility() {
-            this.showOptions = !this.showOptions;
-        },
-        selectOption(optionNumber) {
+
+        const selectOption = (optionNumber) => {
             if (optionNumber === 3) {
-                this.toggleOptionsVisibility();
+                toggleOptionsVisibility();
             } else if (optionNumber === 2) {
-                // Show multiplayer options
-                this.showOptions = false;
-                this.showMultiplayerOptions = true;
+                showOptions.value = false;
+                showMultiplayerOptions.value = true;
             } else {
                 console.log(`Option ${optionNumber} selected`);
-                // solo mode here i guess
+                // solo goes here i guess
             }
-        },
-        backToMainOptions() {
-            this.showMultiplayerOptions = false;
-            this.showOptions = true;
-        },
+        };
+
+        const backToMainOptions = () => {
+            showMultiplayerOptions.value = false;
+            showOptions.value = true;
+        };
+
+        return {
+            showOptions,
+            showMultiplayerOptions,
+            toggleOptionsVisibility,
+            selectOption,
+            backToMainOptions,
+        };
     },
 }
 </script>
