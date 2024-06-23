@@ -122,7 +122,7 @@ export default {
 <style scoped>
 #homepage {
     background-image: url('~@/assets/background.png');
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     min-height: 100vh;
 }
