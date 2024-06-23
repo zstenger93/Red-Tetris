@@ -5,6 +5,8 @@ install:
 	nvm install node
 	npm install
 
+npml:
+	npm install --legacy-peer-deps
 
 run:
 	npm run serve
