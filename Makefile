@@ -6,7 +6,7 @@ install:
 	npm install
 
 npml:
-	npm install --legacy-peer-deps
+	cd app && npm install --legacy-peer-deps
 
 run:
-	npm run serve
+	cd app && npm run serve
