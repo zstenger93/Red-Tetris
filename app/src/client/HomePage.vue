@@ -48,7 +48,7 @@
                 Back
             </button>
         </div>
-        <div v-else class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center"
+        <div v-else class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-start"
             style="z-index: 1000;">
             <SoloTetris />
             <button @click="backToMainOptions"
@@ -122,7 +122,7 @@ export default {
 <style scoped>
 #homepage {
     background-image: url('~@/assets/background.png');
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     min-height: 100vh;
 }
