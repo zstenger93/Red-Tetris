@@ -1,38 +1,16 @@
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const path = require('path');
 
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
+const http = require('http').createServer();
 
-const PORT = process.env.PORT || 3000;
-
-// Serve static files from the Vue app
-app.use(express.static(path.join(__dirname, 'dist')));
+const io = require('socket.io')(http, {
+    cors: { origin: "*" }
+});
 
 io.on('connection', (socket) => {
-  console.log('New client connected');
-
-  socket.on('join', (room) => {
-    socket.join(room);
-    console.log(`Client joined room: ${room}`);
-  });
-
-  socket.on('startGame', () => {
-    io.to('room1').emit('gameStart', { message: 'The game has started!' });
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
+    console.log('a user connected');
+    socket.on('message', (message) =>     {
+        console.log(message);
+        io.emit('message', `${socket.id.substr(0,2)} said ${message}` );
+    });
 });
 
-// All other requests not handled will return the Vue app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
-
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    
+http.listen(3000, () => console.log('listening on http://localhost:3000') );
