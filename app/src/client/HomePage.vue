@@ -1,9 +1,6 @@
 <template>
     <div id="homepage" class="bg-yellow-500 bg-opacity-50 min-h-screen flex items-center justify-center">
-        <div v-if="showLobby">
-            <TetrisLobby />
-        </div>
-        <button v-else-if="!showOptions && !showHowToPlay && !showLobby"
+        <button v-if="!showOptions && !showHowToPlay && !showLobby"
             @click="toggleOptionsVisibility"
             class="bg-gray-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full bg-opacity-80 cursor-pointer">
             Let's Play a Game
@@ -27,10 +24,19 @@
                 Back
             </button>
         </div>
-        <div v-if="showLobby || showHowToPlay"
+        <div v-if="showHowToPlay"
             class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center"
             style="z-index: 1000;">
             <HowToPlay />
+            <button @click="backToMainOptions"
+                class="mt-4 bg-blue-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full cursor-pointer bg-opacity-50">
+                Back
+            </button>
+        </div>
+        <div v-else-if="showLobby"
+            class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center"
+            style="z-index: 1000;">
+            <TetrisLobby />
             <button @click="backToMainOptions"
                 class="mt-4 bg-blue-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full cursor-pointer bg-opacity-50">
                 Back
