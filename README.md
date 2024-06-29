@@ -1,2 +1,2 @@
 # RED_TETRIS
-![Background Image](/app/src/assets/game.png)
+![Background Image](/red_tetris/src/assets/game.png)
