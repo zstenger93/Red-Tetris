@@ -7,6 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "jest --verbose",
+    "coverage": "jest --coverage",
     "start": "node src/server/server.js",
     "dev": "concurrently \"npm run serve\" \"npm run start\""
   },
