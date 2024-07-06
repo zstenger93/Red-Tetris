@@ -11,10 +11,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'index.html'));
 });
 
-app.get('/room/:room', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'room.html'));
-});
-
 const httpServer = http.createServer(app);
 
 const PORT = process.env.PORT || 8000;
@@ -29,24 +25,37 @@ const io = new Server(socketServer, {
     }
 });
 
+const userSockets = {};
+const rooms = {};
+// socket connection
 io.on('connection', (socket) => {
-    console.log('a user connected');
-
-    socket.on('joinRoom', (room) => {
+    console.log('A user connected');
+    socket.on('joinRoom', ({ room, username }) => {
         socket.join(room);
-        console.log(`User joined room: ${room}`);
+        userSockets[socket.id] = { room, username };
+        console.log(`User '${username}' joined room '${room}'`);
     });
 
+    // recive message
     socket.on('message', ({ room, message }) => {
-        console.log(`Message from client in room ${room}: ${message}`);
-        socket.to(room).emit('message', message);
+        const username = userSockets[socket.id]?.username || 'Anonymous';
+        console.log(`Message from '${username}' in room '${room}': ${message}`);
+        socket.to(room).emit('message', { username, message });
     });
-
+    // disconeect
     socket.on('disconnect', () => {
-        console.log('a user disconnected');
+        const user = userSockets[socket.id];
+        if (user) {
+            console.log(`User '${user.username}' disconnected from room '${user.room}'`);
+            delete userSockets[socket.id];
+        } else {
+            console.log('A user disconnected');
+        }
     });
 });
 
+
+// listening socket
 const SOCKET_PORT = 8080;
 socketServer.listen(SOCKET_PORT, () => {
     console.log(`Socket.IO server listening on http://localhost:${SOCKET_PORT}`);

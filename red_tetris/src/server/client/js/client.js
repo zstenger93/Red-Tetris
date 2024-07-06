@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         socket = io('http://localhost:8080');
         socket.on('connect', () => {
             console.log('Connected to the WebSocket server');
-            socket.emit('joinRoom', room);
+            socket.emit('joinRoom', {room, username});
         });
         
         socket.on('message', (message) => {
