@@ -12,5 +12,10 @@
   "description": "",
   "dependencies": {
     "socket.io-client": "^4.7.5"
+  },
+  "devDependencies": {
+    "express": "^4.19.2",
+    "http": "^0.0.1-security",
+    "socket.io": "^4.7.5"
   }
 }
