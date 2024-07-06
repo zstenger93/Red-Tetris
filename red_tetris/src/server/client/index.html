@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socket.IO Client</title>
+    <title>RED TETRIS</title>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script defer src="js/client.js"></script>
-    </head>
-    <body>
-        <h1>Socket.IO Client</h1>
+    <style>
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div id="home">
+        <h1>RED TETRIS</h1>
         <input type="text" id="username" placeholder="Username">
         <input type="text" id="room" placeholder="Room">
         <button id="join">Join</button>
+    </div>
+    <div id="game" class="hidden">
+        <h1>Game Room</h1>
+        <div id="roomInfo"></div>
+        <div id="messages"></div>
+        <input type="text" id="messageInput" placeholder="Type a message">
+        <button id="sendMessage">Send</button>
+    </div>
 </body>
 </html>
