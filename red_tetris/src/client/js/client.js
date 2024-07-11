@@ -1,3 +1,20 @@
+function createGameBoard(rows, cols) {
+    const board = document.getElementById('tetrisBoard');
+    function createGrid() {
+        board.innerHTML = '';
+        for (let i = 0; i < rows * cols; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            board.appendChild(cell);
+        }
+    }
+    createGrid();
+}
+
+
+    const board = document.getElementById('tetrisBoard');
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const homeDiv = document.getElementById('home');
     const gameDiv = document.getElementById('game');
@@ -18,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     joinButton.addEventListener('click', () => {
         const username = document.getElementById('username').value;
         const room = document.getElementById('room').value;
-        
+        createGameBoard(20, 10);
         if (username && room) {
             history.pushState(null, '', `/#${room}[${username}]`);
             navigateToGame(username, room);

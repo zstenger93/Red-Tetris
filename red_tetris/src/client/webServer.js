@@ -12,13 +12,6 @@ app.get('/js/client.js', (req, res) => {
     console.log('client.js sent');
 });
 
-
-
-app.get('/css/style.css', (req, res) => {
-    res.sendFile(path.join(__dirname, 'css', 'style.css'));
-});
-
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
