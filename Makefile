@@ -3,3 +3,6 @@ install:
 	source ~/.nvm/nvm.sh
 	nvm install node
 	npm install
+
+
+run:
