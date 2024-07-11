@@ -11,8 +11,10 @@ function createGameBoard(rows, cols) {
     createGrid();
 }
 
-
+function removeGameBoard() {
     const board = document.getElementById('tetrisBoard');
+    board.innerHTML = '';
+}
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,13 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on('connect', () => {
             console.log('Connected to the WebSocket server');
             socket.emit('joinRoom', {room, username});
+            createGameBoard(20, 10);
         });
     }
 
     joinButton.addEventListener('click', () => {
         const username = document.getElementById('username').value;
         const room = document.getElementById('room').value;
-        createGameBoard(20, 10);
         if (username && room) {
             history.pushState(null, '', `/#${room}[${username}]`);
             navigateToGame(username, room);
@@ -56,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameDiv.classList.add('hidden');
             if (socket) {
                 socket.disconnect();
+                removeGameBoard();
                 socket = null;
             }
         }
