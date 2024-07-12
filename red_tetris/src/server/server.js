@@ -85,6 +85,10 @@ io.on('connection', (socket) => {
             console.log(`User '${user.username}' disconnected from room '${user.room}'`);
             delete userSockets[socket.id];
             games[user.room].removePlayer(socket.id);
+            if (Object.keys(games[user.room].listOfPeopleInRoom).length === 0) {
+                delete games[user.room];
+                console.log("Room deleted");
+            }
         } else {
             console.log('A user disconnected');
         }
