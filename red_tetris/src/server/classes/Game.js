@@ -20,7 +20,17 @@ class Game {
         delete this.listOfPeopleInRoom[socketId];
         if (this.player1.socketId === socketId) this.player1 = null;
         else if (this.player2.socketId === socketId) this.player2 = null;
-        console.log("Player removed from the game game");
+        console.log("Player removed from the game");
+    }
+
+    startGame() {
+        this.gameState = "playing";
+        console.log("Game started");
+    }
+
+    endGame() {
+        this.gameState = "ended";
+        console.log("Game ended");
     }
 }
 
