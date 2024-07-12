@@ -16,6 +16,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+app.get('/assets/background.png', (req, res) => {
+    res.sendFile(path.join(__dirname, 'assets', 'background.png'));
+});
+
 const httpServer = http.createServer(app);
 
 const PORT = process.env.PORT || 8000;
