@@ -18,7 +18,7 @@ function createGameBoard(rows, cols) {
         // Removed the board.innerHTML = ''; line to avoid clearing the board before adding the second grid
         for (let i = 0; i < rows * cols; i++) {
             const cell = document.createElement('div');
-            cell.style.backgroundColor = 'wheat';
+            cell.style.backgroundColor = '#A4343A';
             cell.style.border = '1px solid black';
             cell.style.width = '45px';
             cell.style.height = '45px';
@@ -91,7 +91,5 @@ document.addEventListener('DOMContentLoaded', () => {
         const [room, player] = initialHash.slice(1).split('[');
         const playerName = player.slice(0, -1);
         navigateToGame(playerName, room);
-    }
-
-    
+    }    
 });
