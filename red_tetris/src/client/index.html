@@ -11,6 +11,7 @@
         .page {position: relative; justify-content: center; align-items: center; height: 100vh; width: 100vw; background-image: url("assets/background.png"); overflow-x: hidden; overflow-y: hidden; background-position: center; background-size: cover; background-repeat: no-repeat; }
         .page > * { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);}
         .title { display: flex; flex-direction: column; align-items: center; }
+        #startButton { display: none; position: fixed; bottom: 10px; left: 49.6%; transform: translateX(-50%); padding: 10px; background-color: black; color: white; font-size: 1.5em; cursor: pointer; width: 120px; height: 30px; text-align: center; border: 1px solid white; border-radius: 20px;}
         h1 { font-size: 3em; color: #A4343A; }
         input { margin: 10px; padding: 5px; font-size: 1em; }
     </style>
@@ -26,6 +27,7 @@
     </div>
     <div id="game" class="hidden page" >
         <div id="tetrisBoard"></div>
+        <div id="startButton">Start</div>
     </div>
 </body>
 </html>
