@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
         socket.join(room);
         userSockets[socket.id] = { room, username };
         // console.log(`User '${username}' joined room '${room}'`);
-        if (!games[room]) games[room] = new Game();
+        if (!games[room]) games[room] = new Game(); 
         games[room].addPlayer(username, socket.id);
         if (games[room].player1 !== null) {
             const playerSocket = io.sockets.sockets.get(games[room].player1.socketId);
