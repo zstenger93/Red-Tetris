@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
     console.log(`User ${username} is joining room ${room}`);
     socket.join(room);
     userSockets[socket.id] = { room, username };
-    if (!games[room]) games[room] = new Game();
+    if (!games[room]) games[room] = new Game(room, io);
     games[room].addPlayer(username, socket.id);
     if (games[room].player1 !== null) {
       const playerSocket = io.sockets.sockets.get(games[room].player1.socketId);

@@ -34,7 +34,7 @@ function createGameBoard(rows, cols) {
     const tetrisPanel = document.createElement("div");
     const tetrisDashBoard = document.createElement("div");
     tetrisDashBoard.id = "tetrisDashBoard";
-    tetrisDashBoard.style.display = "grid"; // Ensure this is set
+    tetrisDashBoard.style.display = "grid";
     tetrisDashBoard.style.gridTemplateColumns = "repeat(4, 1fr)";
     tetrisDashBoard.style.gridTemplateRows = "repeat(4, 1fr)";
     tetrisDashBoard.classList.add("tetris", "dashboard");
