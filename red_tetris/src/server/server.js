@@ -26,7 +26,7 @@ const Game = require('./classes/Game');
 
 // }
 
-const games = {};
+var games = {};
 
 function messageParser(room, username, message) {
     checkRoomState(room, username, message);
@@ -58,7 +58,7 @@ const io = new Server(socketServer, {
     }
 });
 
-const userSockets = {};
+var userSockets = {};
 // socket connection
 io.on('connection', (socket) => {
     console.log('A user connected');
@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
         userSockets[socket.id] = { room, username };
         // console.log(`User '${username}' joined room '${room}'`);
         if (!games[room]) games[room] = new Game();
-        games[room].addPlayer(username);
+        games[room].addPlayer(username, socket.id);
     });
 
     // recive message
@@ -80,16 +80,16 @@ io.on('connection', (socket) => {
     });
     // disconeect
     socket.on('disconnect', () => {
-        const user = userSockets[socket.id];
+        var user = userSockets[socket.id];
         if (user) {
             console.log(`User '${user.username}' disconnected from room '${user.room}'`);
             games[user.room].removePlayer(socket.id);
-            console.log(Object.keys(games[user.room].listOfPeopleInRoom).length)
+            if (Object.keys(games[user.room].listOfPeopleInRoom).length === 0) {
+                delete games[user.room];
+                console.log("Room deleted");
+            }
+
             delete userSockets[socket.id];
-            // if(Object.keys(games[user.room].listOfPeopleInRoom).length === 0) {
-            //     delete games[user.room];
-            //     console.log("Room deleted");
-            // }
         } else {
             console.log('A user disconnected');
         }
