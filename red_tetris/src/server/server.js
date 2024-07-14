@@ -3,27 +3,6 @@ const http = require("http");
 const { Server } = require("socket.io");
 const Game = require("./classes/Game");
 
-// function checkRoomState(room, username, message) {
-//     return;
-// }
-
-// function checkPlayerState(room, username, message){
-//     return;
-// }
-
-// function checkGameBoardState(room, username, message){
-//     return;
-// }
-
-// function checkCurrentPiece(room, username, message){
-
-// }
-
-// function createBitMask(username, message) {
-//     bitMask16 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-// }
-
 var games = {};
 
 const socketServer = http.createServer();
@@ -34,13 +13,13 @@ const io = new Server(socketServer, {
 });
 
 var userSockets = {};
+
 // socket connection
 io.on("connection", (socket) => {
-  console.log("A user connected");
   socket.on("joinRoom", async ({ room, username }) => {
+    console.log(`User ${username} is joining room ${room}`);
     socket.join(room);
     userSockets[socket.id] = { room, username };
-    // console.log(`User '${username}' joined room '${room}'`);
     if (!games[room]) games[room] = new Game();
     games[room].addPlayer(username, socket.id);
     if (games[room].player1 !== null) {
@@ -49,26 +28,25 @@ io.on("connection", (socket) => {
     }
   });
 
-  function messageParser(room, username, message) {
-    console.log(message);
-    if (message === "start") {
-      console.log("Game start command received");
-      return;
+  function messageParser(room, username, data) {
+    console.log(`Message received from ${username} in room ${room}: ${data}`);
+    if (data === "start") {
+      games[room].startGame();
+      io.to(room).emit("message", { username, message: "game started" });
     }
   }
-  // recive message
+
+  // receive message
   socket.on("message", ({ room, message }) => {
     const username = userSockets[socket.id]?.username || "Anonymous";
-    console.log(message);
-    messageParser(room, username, message);
+    const userRoom = userSockets[socket.id]?.room || room;
+    messageParser(userRoom, username, message);
   });
-  // disconeect
+
+  // disconnect
   socket.on("disconnect", () => {
     var user = userSockets[socket.id];
     if (user) {
-      console.log(
-        `User '${user.username}' disconnected from room '${user.room}'`
-      );
       games[user.room].removePlayer(socket.id);
       if (games[user.room].player1 !== null) {
         const playerSocket = io.sockets.sockets.get(

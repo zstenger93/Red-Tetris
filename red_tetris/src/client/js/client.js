@@ -39,13 +39,17 @@ function removeGameBoard() {
 }
 
 function parseMessage(data, socket) {
+  console.log(data.message);
   if (data.message === "control_on") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "block";
     startButton.addEventListener("click", () => {
-      console.log("clicked");
       socket.emit("message", { message: "start" });
     });
+  }
+  if (data.message === "game started") {
+    const startButton = document.getElementById("startButton");
+    startButton.style.display = "none";
   }
 }
 
@@ -54,21 +58,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const gameDiv = document.getElementById("game");
   const joinButton = document.getElementById("join");
 
-  let socket = io("http://localhost:8080");
+  let socket;
 
   function navigateToGame(username, room) {
     homeDiv.classList.add("hidden");
     gameDiv.classList.remove("hidden");
+
+    socket = io("http://localhost:8080");
+
     socket.on("connect", () => {
       socket.emit("joinRoom", { room, username });
       createGameBoard(20, 10);
     });
-  }
 
-  socket.on("message", (data) => {
-    parseMessage(data, socket);
-    console.log(data);
-  });
+    socket.on("message", (data) => {
+      parseMessage(data, socket);
+    });
+  }
 
   joinButton.addEventListener("click", () => {
     const username = document.getElementById("username").value;
