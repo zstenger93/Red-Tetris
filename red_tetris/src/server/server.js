@@ -62,19 +62,23 @@ var userSockets = {};
 // socket connection
 io.on('connection', (socket) => {
     console.log('A user connected');
-    socket.on('joinRoom', ({ room, username }) => {
+    socket.on('joinRoom', async ({ room, username }) => {
         socket.join(room);
         userSockets[socket.id] = { room, username };
         // console.log(`User '${username}' joined room '${room}'`);
         if (!games[room]) games[room] = new Game();
         games[room].addPlayer(username, socket.id);
+        if (games[room].player1 !== null) {
+            const playerSocket = io.sockets.sockets.get(games[room].player1.socketId);
+            playerSocket.emit('message', { message: 'control_on' });
+        }
     });
 
     // recive message
     socket.on('message', ({ room, message }) => {
         const username = userSockets[socket.id]?.username || 'Anonymous';
-        test = "123"
-        socket.to(room).emit('message', { username, test });
+        // test = "123"
+        // socket.to(room).emit('message', { username, test });
         // console.log(`Message from '${username}' in room '${room}': ${message}`);
         // socket.to(room).emit('message', { username, message });
     });
@@ -88,8 +92,11 @@ io.on('connection', (socket) => {
                 delete games[user.room];
                 console.log("Room deleted");
             }
-
             delete userSockets[socket.id];
+            if (games[room].player1 !== null) {
+                const playerSocket = io.sockets.sockets.get(games[room].player1.socketId);
+                playerSocket.emit('message', { message: 'control_on' });
+            }
         } else {
             console.log('A user disconnected');
         }
