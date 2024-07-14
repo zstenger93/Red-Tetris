@@ -4,6 +4,7 @@ function createGameBoard(rows, cols) {
   board.style.justifyContent = "space-around";
   board.style.alignItems = "center";
   board.style.gap = "100px";
+
   function createGrid(gridId) {
     const tetrisBoard = document.createElement("div");
     tetrisBoard.classList.add("tetris", gridId); // Use gridId to differentiate
@@ -23,12 +24,43 @@ function createGameBoard(rows, cols) {
       cell.style.width = "45px";
       cell.style.height = "45px";
       cell.classList.add("cell");
-      tetrisBoard.appendChild(cell);
       cell.id = `${gridId}_cell_${i}`;
+      tetrisBoard.appendChild(cell);
     }
     board.appendChild(tetrisBoard);
   }
+
+  function createDashBoard() {
+    const tetrisPanel = document.createElement("div");
+    const tetrisDashBoard = document.createElement("div");
+    tetrisDashBoard.id = "tetrisDashBoard";
+    tetrisDashBoard.style.display = "grid"; // Ensure this is set
+    tetrisDashBoard.style.gridTemplateColumns = "repeat(4, 1fr)";
+    tetrisDashBoard.style.gridTemplateRows = "repeat(4, 1fr)";
+    tetrisDashBoard.classList.add("tetris", "dashboard");
+    for (let i = 0; i < 16; i++) {
+      const cell = document.createElement("div");
+      cell.style.backgroundColor = "#A4343A";
+      cell.style.border = "1px solid black";
+      cell.style.width = "45px";
+      cell.style.height = "45px";
+      cell.classList.add("cell");
+      cell.id = `dashboard_cell_${i}`;
+      tetrisDashBoard.appendChild(cell);
+    }
+    const button = document.createElement("button");
+    button.id = "startButton";
+    button.style.display = "none";
+    button.textContent = "Start Game";
+    button.style.width = "200px";
+    button.style.height = "50px";
+    tetrisPanel.appendChild(tetrisDashBoard);
+    tetrisPanel.appendChild(button);
+    board.appendChild(tetrisPanel);
+  }
+
   board.innerHTML = "";
+  createDashBoard();
   createGrid("grid1");
   createGrid("grid2");
 }

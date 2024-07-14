@@ -1,33 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RED TETRIS</title>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script defer src="js/client.js"></script>
     <style>
-        .hidden { display: none; }
-        .page {position: relative; justify-content: center; align-items: center; height: 100vh; width: 100vw; background-image: url("assets/background.png"); overflow-x: hidden; overflow-y: hidden; background-position: center; background-size: cover; background-repeat: no-repeat; }
-        .page > * { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);}
-        .title { display: flex; flex-direction: column; align-items: center; }
-        #startButton { display: none; position: fixed; bottom: 10px; left: 49.6%; transform: translateX(-50%); padding: 10px; background-color: black; color: white; font-size: 1.5em; cursor: pointer; width: 120px; height: 30px; text-align: center; border: 1px solid white; border-radius: 20px;}
-        h1 { font-size: 3em; color: #A4343A; }
-        input { margin: 10px; padding: 5px; font-size: 1em; }
+      .hidden {
+        display: none;
+      }
+      .page {
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        background-image: url("assets/background.png");
+        overflow-x: hidden;
+        overflow-y: hidden;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      .page > * {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      /* #startButton { display: none; position: fixed; bottom: 10px; left: 49.6%; transform: translateX(-50%); padding: 10px; background-color: black; color: white; font-size: 1.5em; cursor: pointer; width: 120px; height: 30px; text-align: center; border: 1px solid white; border-radius: 20px;} */
+      h1 {
+        font-size: 3em;
+        color: #a4343a;
+      }
+      input {
+        margin: 10px;
+        padding: 5px;
+        font-size: 1em;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="home" class="page">
-        <div class="title">
-            <h1>RED TETRIS</h1>
-            <input type="text" id="username" placeholder="Username">
-            <input type="text" id="room" placeholder="Room">
-            <button id="join">Join</button>
-        </div>
+      <div class="title">
+        <h1>RED TETRIS</h1>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="text" id="room" placeholder="Room" />
+        <button id="join">Join</button>
+      </div>
     </div>
-    <div id="game" class="hidden page" >
-        <div id="tetrisBoard"></div>
-        <div id="startButton">Start</div>
+    <div id="game" class="hidden page">
+      <div id="tetrisBoard"></div>
     </div>
-</body>
+  </body>
 </html>
