@@ -51,11 +51,15 @@ document.addEventListener('DOMContentLoaded', () => {
         gameDiv.classList.remove('hidden');
         socket = io('http://localhost:8080');
         socket.on('connect', () => {
-            console.log('Connected to the WebSocket server');
             socket.emit('joinRoom', {room, username});
             createGameBoard(20, 10);
         });
+        
+        socket.on('message', (data) => {
+            console.log('Received from server:', data);
+        });
     }
+
 
     joinButton.addEventListener('click', () => {
         const username = document.getElementById('username').value;
@@ -91,5 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const [room, player] = initialHash.slice(1).split('[');
         const playerName = player.slice(0, -1);
         navigateToGame(playerName, room);
-    }    
+    }
+
+
 });
