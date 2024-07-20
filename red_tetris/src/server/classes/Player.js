@@ -52,7 +52,8 @@ class Player {
         returnMessage += this.board[i][j] + rowNames[i] + collumnNames[j];
       }
     }
+    return returnMessage;
   }
-};
+}
 
 module.exports = Player;

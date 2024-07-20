@@ -8,15 +8,15 @@ class Game {
     this.gameState = "waiting";
     this.room = room;
     this.io = io;
+    this.gameInterval = null;
     console.log("Game created");
   }
 
   addPlayer(name, socketId) {
     this.listOfPeopleInRoom[socketId] = new Player(name, socketId);
     if (this.player1 === null) this.player1 = this.listOfPeopleInRoom[socketId];
-    else if (this.player2 === null)
+    else if (this.player2 === null && this.gameState === "waiting")
       this.player2 = this.listOfPeopleInRoom[socketId];
-    this.peopleInRoomCount++;
   }
 
   removePlayer(socketId) {
@@ -24,6 +24,7 @@ class Game {
       delete this.listOfPeopleInRoom[socketId];
       this.player1 = this.player2;
       this.player2 = null;
+      this.endGame();
     }
     if (this.player2 !== null && this.player2.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
@@ -49,11 +50,22 @@ class Game {
 
   startGame() {
     this.gameState = "started";
-    this.io.to(this.roomName).emit("message", { message: this.gameState });
-    setInterval(() => {
+    this.io.to(this.room).emit("message", { message: this.gameState });
+    this.gameInterval = setInterval(() => {
       this.gameLogic();
-      this.io.to(this.roomName).emit("message", { message: this.gameState });
-      
+      if (this.player2 !== null) {
+        this.io.to(this.room).emit("message", {
+          message: this.gameState,
+          board1: this.player1.returnBoard(),
+          board2: this.player2.returnBoard(),
+        });
+      } else {
+        this.io.to(this.room).emit("message", {
+          message: this.gameState,
+          board1: this.player1.returnBoard(),
+          board2: "null",
+        });
+      }
     }, 1000);
   }
 
@@ -61,6 +73,7 @@ class Game {
 
   endGame() {
     this.gameState = "ended";
+    clearInterval(this.gameInterval);
   }
 }
 
