@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
     userSockets[socket.id] = { room, username };
     if (!games[room]) games[room] = new Game(room, io);
     games[room].addPlayer(username, socket.id);
-    if (games[room].player1 !== null) {
+    if (games[room].player1 !== null && games[room].gameState === "waiting") {
       const playerSocket = io.sockets.sockets.get(games[room].player1.socketId);
       playerSocket.emit("message", { message: "control_on" });
     }

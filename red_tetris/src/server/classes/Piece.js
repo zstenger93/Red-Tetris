@@ -47,8 +47,8 @@ class JPiece extends Piece {
     this.name = 2;
     this.rotation = 0;
     this.shape = [
-      [1, 0, 0],
-      [1, 1, 1],
+      [2, 0, 0],
+      [2, 2, 2],
       [0, 0, 0],
     ];
   }
@@ -60,8 +60,8 @@ class ZPiece extends Piece {
     this.name = 3;
     this.rotation = 0;
     this.shape = [
-      [1, 1, 0],
-      [0, 1, 1],
+      [3, 3, 0],
+      [0, 3, 3],
       [0, 0, 0],
     ];
   }
@@ -73,8 +73,8 @@ class SPiece extends Piece {
     this.name = 4;
     this.rotation = 0;
     this.shape = [
-      [0, 1, 1],
-      [1, 1, 0],
+      [0, 4, 4],
+      [4, 4, 0],
       [0, 0, 0],
     ];
   }
@@ -86,8 +86,8 @@ class OPiece extends Piece {
     this.name = 5;
     this.rotation = 0;
     this.shape = [
-      [1, 1],
-      [1, 1],
+      [5, 5],
+      [5, 5],
     ];
   }
 }
@@ -98,8 +98,8 @@ class TPiece extends Piece {
     this.name = 6;
     this.rotation = 0;
     this.shape = [
-      [0, 1, 0],
-      [1, 1, 1],
+      [0, 6, 0],
+      [6, 6, 6],
       [0, 0, 0],
     ];
   }
@@ -112,7 +112,7 @@ class IPiece extends Piece {
     this.rotation = 0;
     this.shape = [
       [0, 0, 0, 0],
-      [1, 1, 1, 1],
+      [7, 7, 7, 7],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ];

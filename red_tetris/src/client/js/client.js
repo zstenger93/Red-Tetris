@@ -7,7 +7,7 @@ function createGameBoard(rows, cols) {
 
   function createGrid(gridId) {
     const tetrisBoard = document.createElement("div");
-    tetrisBoard.classList.add("tetris", gridId); // Use gridId to differentiate
+    tetrisBoard.classList.add("tetris", gridId);
     tetrisBoard.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
     tetrisBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
     tetrisBoard.style.width = `${cols * 50}px`;
@@ -16,7 +16,6 @@ function createGameBoard(rows, cols) {
     tetrisBoard.style.display = "grid";
     tetrisBoard.style.gridGap = "1px";
     tetrisBoard.style.backgroundColor = "black";
-    // Removed the board.innerHTML = ''; line to avoid clearing the board before adding the second grid
     for (let i = 0; i < rows * cols; i++) {
       const cell = document.createElement("div");
       cell.style.backgroundColor = "#A4343A";
@@ -71,7 +70,7 @@ function removeGameBoard() {
 }
 
 function parseMessage(data, socket) {
-  console.log(data.message);
+  console.log(data);
   if (data.message === "control_on") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "block";

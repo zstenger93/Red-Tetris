@@ -6,3 +6,4 @@ install:
 
 
 run:
+	cd red_tetris && npm run start
