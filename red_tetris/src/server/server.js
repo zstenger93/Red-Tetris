@@ -29,8 +29,8 @@ io.on("connection", (socket) => {
   });
 
   function messageParser(room, username, data) {
-    console.log(`Message received from ${username} in room ${room}: ${data}`);
     if (data === "start") {
+      if (games[room].gameState !== "waiting") return;
       games[room].startGame();
       io.to(room).emit("message", { username, message: "game_started" });
     }

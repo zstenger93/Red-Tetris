@@ -8,7 +8,7 @@ class Game {
     this.gameState = "waiting";
     this.room = room;
     this.io = io;
-    this.gameInterval = null;
+    this.gameInterval = [];
     console.log("Game created");
   }
 
@@ -22,9 +22,12 @@ class Game {
   removePlayer(socketId) {
     if (this.player1 !== null && this.player1.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
+      if (this.player2 == null) {
+        this.endGame();
+        this.gameState = "waiting";
+      }
       this.player1 = this.player2;
       this.player2 = null;
-      this.endGame();
     }
     if (this.player2 !== null && this.player2.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
@@ -51,29 +54,39 @@ class Game {
   startGame() {
     this.gameState = "started";
     this.io.to(this.room).emit("message", { message: this.gameState });
-    this.gameInterval = setInterval(() => {
+    const gameInterval = setInterval(() => {
       this.gameLogic();
       if (this.player2 !== null) {
         this.io.to(this.room).emit("message", {
           message: this.gameState,
           board1: this.player1.returnBoard(),
           board2: this.player2.returnBoard(),
+          player1: this.player1.name,
+          player2: this.player2.name,
+          list: this.listOfPeopleInRoom,
         });
       } else {
         this.io.to(this.room).emit("message", {
           message: this.gameState,
           board1: this.player1.returnBoard(),
           board2: "null",
+          player1: this.player1.name,
+          list: this.listOfPeopleInRoom,
         });
       }
     }, 1000);
+    this.gameInterval.push(gameInterval);
   }
 
   listenToControls() {}
 
   endGame() {
+    console.log("Ending game");
     this.gameState = "ended";
-    clearInterval(this.gameInterval);
+    console.log("Ending game, interval ID:", this.gameInterval);
+    for (let i = 0; i < this.gameInterval.length; i++) {
+      clearInterval(this.gameInterval[i]);
+    }
   }
 }
 
