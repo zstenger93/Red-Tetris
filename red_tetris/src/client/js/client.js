@@ -218,3 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
     navigateToGame(playerName, room);
   }
 });
+
+module.exports = { createGameBoard, removeGameBoard, parseMessage };
+
