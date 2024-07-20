@@ -78,7 +78,7 @@ class Player {
     if (this.currentPiece === null) {
       return;
     }
-    if (this.vertialPosition > 20) {
+    if (this.vertialPosition > 20 - this.currentPiece.shape.length) {
       this.currentPieceIndex += 1;
       this.generatePieces(this.seed);
       this.vertialPosition = 0;
