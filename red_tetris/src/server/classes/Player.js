@@ -45,7 +45,7 @@ class Player {
     this.currentPiece = null;
     this.currentPieceIndex = 0;
     this.gameBoard = [];
-    this.vertialPosition = 0;
+    this.vertialPosition = 2;
     this.horizontalPosition = 5;
     this.seed = 0;
   }
@@ -74,11 +74,51 @@ class Player {
     this.currentPiece = piece;
   }
 
+  registerPiece() {
+    for (let i = 0; i < this.currentPiece.shape.length; i++) {
+      for (let j = 0; j < this.currentPiece.shape[i].length; j++) {
+        if (this.currentPiece.shape[i][j] !== 0) {
+          this.board[i + this.vertialPosition][j + this.horizontalPosition] =
+            this.currentPiece.shape[i][j];
+        }
+      }
+    }
+  }
+
+  checkCollision(board, shape, offsetX, offsetY) {
+    for (let i = 0; i < shape.length; i++) {
+      for (let j = 0; j < shape[i].length; j++) {
+        if (shape[i][j] !== 0) {
+          if (
+            i + offsetX < 0 ||
+            i + offsetX >= board.length ||
+            j + offsetY < 0 ||
+            j + offsetY >= board[i + offsetX].length
+          ) {
+            return true;
+          }
+          if (board[i + offsetX][j + offsetY] === undefined) return true;
+          if (board[i + offsetX][j + offsetY] !== 0) return true;
+        }
+      }
+    }
+    return false;
+  }
+
   moveDown() {
     if (this.currentPiece === null) {
       return;
     }
-    if (this.vertialPosition > 20 - this.currentPiece.shape.length) {
+
+    if (
+      this.checkCollision(
+        this.board,
+        this.currentPiece.shape,
+        this.vertialPosition + 1,
+        this.horizontalPosition
+      )
+    ) {
+      this.registerPiece();
       this.currentPieceIndex += 1;
       this.generatePieces(this.seed);
       this.vertialPosition = 0;
