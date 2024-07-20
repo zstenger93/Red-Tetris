@@ -18,14 +18,6 @@ class Piece {
       row.map((val, j) => this.shape[3 - j][i])
     );
   }
-
-  debug() {
-    console.log(this.shape);
-  }
-
-  getShape() {
-    return this.shape;
-  }
 }
 
 class LPiece extends Piece {
@@ -127,4 +119,5 @@ module.exports = {
   OPiece,
   TPiece,
   IPiece,
+  Piece,
 };

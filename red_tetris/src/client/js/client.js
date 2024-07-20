@@ -24,13 +24,13 @@ const rowNames = [
 
 const colorNames = [
   "#A4343A",
-  "#9B3237",
-  "#79272B",
-  "#571C1F",
-  "#351113",
-  "#712428",
-  "#932F34",
-  "#692225",
+  "#C2505E",
+  "#69202A",
+  "#D77B86",
+  "#500C18",
+  "#E08C97",
+  "#410912",
+  "#F2A2AE",
 ];
 
 function createGameBoard(rows, cols) {
@@ -112,7 +112,7 @@ function colorTheGameField(data) {
     const cell = document.getElementById(
       `grid1${data.board1[i + 1]}${data.board1[i + 2]}`
     );
-    cell.style.backgroundColor = colorNames[data.board2[i]];
+    cell.style.backgroundColor = colorNames[data.board1[i]];
   }
   if (!data.board2 || data.board2 === "null") return;
   for (let i = 0; i < data.board2.length; i = i + 3) {
@@ -120,6 +120,23 @@ function colorTheGameField(data) {
       `grid2${data.board2[i + 1]}${data.bord2[i + 2]}`
     );
     cell.style.backgroundColor = colorNames[data.board2[i]];
+  }
+}
+
+function drawOverlay(data) {
+  if (!data.overlay1 || data.overlay1 === "null") return;
+  for (let i = 0; i < data.overlay1.length; i = i + 3) {
+    const cell = document.getElementById(
+      `grid1${data.overlay1[i + 1]}${data.overlay1[i + 2]}`
+    );
+    cell.style.backgroundColor = colorNames[data.overlay1[i]];
+  }
+  if (!data.overlay2 || data.overlay2 === "null") return;
+  for (let i = 0; i < data.overlay2.length; i = i + 3) {
+    const cell = document.getElementById(
+      `grid2${data.overlay2[i + 1]}${data.overlay2[i + 2]}`
+    );
+    cell.style.backgroundColor = colorNames[data.overlay2[i]];
   }
 }
 
@@ -138,6 +155,8 @@ function parseMessage(data, socket) {
   }
   if (data.message === "started") {
     colorTheGameField(data);
+    setTimeout(() => {}, 50);
+    drawOverlay(data);
   }
 }
 
