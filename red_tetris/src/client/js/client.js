@@ -42,7 +42,7 @@ function createGameBoard(rows, cols) {
 
   function createGrid(gridId) {
     const tetrisBoard = document.createElement("div");
-    tetrisBoard.classList.add("tetris", gridId);
+    tetrisBoard.classList.add("tetris");
     tetrisBoard.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
     tetrisBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
     tetrisBoard.style.width = `${cols * 50}px`;
