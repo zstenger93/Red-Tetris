@@ -1,20 +1,27 @@
 {
-  "name": "red_tetris",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "concurrently \"node src/server/server.js\" \"node src/client/webServer.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "concurrently": "^8.2.2",
-    "socket.io": "^4.7.5"
-  },
-  "dependencies": {
-    "express": "^4.19.2"
-  }
+	"name": "red_tetris",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"start": "concurrently \"node src/server/server.js\" \"node src/client/webServer.js\"",
+		"test": "jest --verbose --coverage"
+	},
+	"jest": {
+		"setupFilesAfterEnv": [
+			"<rootDir>/jest.setup.js"
+		]
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"concurrently": "^8.2.2",
+		"jest": "^29.7.0",
+		"socket.io": "^4.7.5",
+		"socket.io-client": "^4.7.5"
+	},
+	"dependencies": {
+		"express": "^4.19.2"
+	}
 }
