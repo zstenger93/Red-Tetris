@@ -1,4 +1,4 @@
-Player = require("./Player");
+const Player = require("./Player");
 
 class Game {
   constructor(room, io) {
@@ -49,10 +49,15 @@ class Game {
 
   startGame() {
     this.gameState = "started";
+    this.io.to(this.roomName).emit("message", { message: this.gameState });
     setInterval(() => {
       this.gameLogic();
+      this.io.to(this.roomName).emit("message", { message: this.gameState });
+      
     }, 1000);
   }
+
+  listenToControls() {}
 
   endGame() {
     this.gameState = "ended";

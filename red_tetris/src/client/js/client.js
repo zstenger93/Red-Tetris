@@ -79,7 +79,7 @@ function parseMessage(data, socket) {
       socket.emit("message", { message: "start" });
     });
   }
-  if (data.message === "game started") {
+  if (data.message === "game_started") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "none";
   }

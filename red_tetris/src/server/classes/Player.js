@@ -1,4 +1,4 @@
-Piece = required("./Piece");
+const Piece = require("./Piece");
 
 collumnNames = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 rowNames = [
@@ -24,7 +24,7 @@ rowNames = [
   "T",
 ];
 
-rowNames = class Player {
+class Player {
   constructor(name, socketId) {
     this.name = name;
     this.socketId = socketId;

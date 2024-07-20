@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
     console.log(`Message received from ${username} in room ${room}: ${data}`);
     if (data === "start") {
       games[room].startGame();
-      io.to(room).emit("message", { username, message: "game started" });
+      io.to(room).emit("message", { username, message: "game_started" });
     }
   }
 
