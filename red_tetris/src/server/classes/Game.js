@@ -81,12 +81,12 @@ class Game {
   listenToControls() {}
 
   endGame() {
-    console.log("Ending game");
     this.gameState = "ended";
-    console.log("Ending game, interval ID:", this.gameInterval);
     for (let i = 0; i < this.gameInterval.length; i++) {
       clearInterval(this.gameInterval[i]);
     }
+    this.gameInterval = [];
+    this.gameState = "waiting";
   }
 }
 

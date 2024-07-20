@@ -1,3 +1,38 @@
+const collumnNames = ["K", "A", "R", "T", "U", "P", "E", "L", "I", "S"];
+const rowNames = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+];
+
+const colorNames = [
+  "#A4343A",
+  "#9B3237",
+  "#79272B",
+  "#571C1F",
+  "#351113",
+  "#712428",
+  "#932F34",
+  "#692225",
+];
+
 function createGameBoard(rows, cols) {
   const board = document.getElementById("tetrisBoard");
   board.style.display = "flex";
@@ -23,7 +58,9 @@ function createGameBoard(rows, cols) {
       cell.style.width = "45px";
       cell.style.height = "45px";
       cell.classList.add("cell");
-      cell.id = `${gridId}_cell_${i}`;
+      cell.id = `${gridId}${collumnNames[i % cols]}${
+        rowNames[Math.floor(i / cols)]
+      }`;
       tetrisBoard.appendChild(cell);
     }
     board.appendChild(tetrisBoard);
@@ -69,6 +106,23 @@ function removeGameBoard() {
   board.innerHTML = "";
 }
 
+function colorTheGameField(data) {
+  if (!data.board1 || data.board1 === "null") return;
+  for (let i = 0; i < data.board1.length; i = i + 3) {
+    const cell = document.getElementById(
+      `grid1${data.board1[i + 1]}${data.board1[i + 2]}`
+    );
+    cell.style.backgroundColor = colorNames[data.board2[i]];
+  }
+  if (!data.board2 || data.board2 === "null") return;
+  for (let i = 0; i < data.board2.length; i = i + 3) {
+    const cell = document.getElementById(
+      `grid2${data.board2[i + 1]}${data.bord2[i + 2]}`
+    );
+    cell.style.backgroundColor = colorNames[data.board2[i]];
+  }
+}
+
 function parseMessage(data, socket) {
   console.log(data);
   if (data.message === "control_on") {
@@ -81,6 +135,9 @@ function parseMessage(data, socket) {
   if (data.message === "game_started") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "none";
+  }
+  if (data.message === "started") {
+    colorTheGameField(data);
   }
 }
 

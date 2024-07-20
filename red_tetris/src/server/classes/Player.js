@@ -1,6 +1,6 @@
 const Piece = require("./Piece");
 
-collumnNames = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+collumnNames = ["K", "A", "R", "T", "U", "P", "E", "L", "I", "S"];
 rowNames = [
   "A",
   "B",
@@ -45,11 +45,15 @@ class Player {
     this.score += score;
   }
 
+  updatePiece(piece) {
+    this.currentPiece = piece;
+  }
+
   returnBoard() {
     let returnMessage = "";
     for (let i = 0; i < this.board.length; i++) {
       for (let j = 0; j < this.board[i].length; j++) {
-        returnMessage += this.board[i][j] + rowNames[i] + collumnNames[j];
+        returnMessage += this.board[i][j] + collumnNames[j] + rowNames[i];
       }
     }
     return returnMessage;
