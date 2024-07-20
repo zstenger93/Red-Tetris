@@ -117,7 +117,7 @@ function colorTheGameField(data) {
   if (!data.board2 || data.board2 === "null") return;
   for (let i = 0; i < data.board2.length; i = i + 3) {
     const cell = document.getElementById(
-      `grid2${data.board2[i + 1]}${data.bord2[i + 2]}`
+      `grid2${data.board2[i + 1]}${data.board2[i + 2]}`
     );
     cell.style.backgroundColor = colorNames[data.board2[i]];
   }
