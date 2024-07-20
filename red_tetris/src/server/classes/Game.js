@@ -9,6 +9,7 @@ class Game {
     this.room = room;
     this.io = io;
     this.gameInterval = [];
+    this.roomSeed = Math.floor(Math.random() * 1000);
     console.log("Game created");
   }
 
@@ -49,31 +50,49 @@ class Game {
     }
   }
 
-  gameLogic() {}
+  gameLogic() {
+    if (this.player1 !== null) {
+      this.player1.moveDown();
+    }
+    if (this.player2 !== null) {
+      this.player2.moveDown();
+    }
+  }
+
+  sendGameState() {
+    if (this.player2 !== null) {
+      this.io.to(this.room).emit("message", {
+        message: this.gameState,
+        board1: this.player1.returnBoard(),
+        board2: this.player2.returnBoard(),
+        overlay1: this.player1.returnOverlay(),
+        overlay2: this.player2.returnOverlay(),
+        player1: this.player1.name,
+        player2: this.player2.name,
+        list: this.listOfPeopleInRoom,
+      });
+    } else {
+      this.io.to(this.room).emit("message", {
+        message: this.gameState,
+        board1: this.player1.returnBoard(),
+        overlay1: this.player1.returnOverlay(),
+        overlay2: "null",
+        board2: "null",
+        player1: this.player1.name,
+        list: this.listOfPeopleInRoom,
+      });
+    }
+  }
 
   startGame() {
     this.gameState = "started";
+    this.roomSeed = Math.floor(Math.random() * 1000);
+    if (this.player1 !== null) this.player1.generatePieces(this.roomSeed);
+    if (this.player2 !== null) this.player2.generatePieces(this.roomSeed);
     this.io.to(this.room).emit("message", { message: this.gameState });
     const gameInterval = setInterval(() => {
       this.gameLogic();
-      if (this.player2 !== null) {
-        this.io.to(this.room).emit("message", {
-          message: this.gameState,
-          board1: this.player1.returnBoard(),
-          board2: this.player2.returnBoard(),
-          player1: this.player1.name,
-          player2: this.player2.name,
-          list: this.listOfPeopleInRoom,
-        });
-      } else {
-        this.io.to(this.room).emit("message", {
-          message: this.gameState,
-          board1: this.player1.returnBoard(),
-          board2: "null",
-          player1: this.player1.name,
-          list: this.listOfPeopleInRoom,
-        });
-      }
+      this.sendGameState();
     }, 1000);
     this.gameInterval.push(gameInterval);
   }
