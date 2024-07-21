@@ -1,6 +1,6 @@
-// const { createStore } = require("redux");
+const { createStore } = require("redux");
 
-// const store = createStore(gameReducer);
+const store = createStore(gameReducer);
 
 const collumnNames = ["K", "A", "R", "T", "U", "P", "E", "L", "I", "S"];
 const rowNames = [
