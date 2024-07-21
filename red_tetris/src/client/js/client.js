@@ -1,3 +1,7 @@
+const { createStore } = require("redux");
+
+const store = createStore(gameReducer);
+
 const collumnNames = ["K", "A", "R", "T", "U", "P", "E", "L", "I", "S"];
 const rowNames = [
   "A",
@@ -109,6 +113,25 @@ function removeGameBoard() {
   board.innerHTML = "";
 }
 
+function coolMode(gridId) {
+  let delay = 0;
+  const delayIncrement = 30;
+
+  function colorCell(cellId, color) {
+    setTimeout(() => {
+      const cell = document.getElementById(cellId);
+      cell.style.backgroundColor = color;
+    }, delay);
+  }
+
+  for (let i = 0; i < 20; i++) {
+    for (let j = 0; j < 10; j++) {
+      colorCell(`${gridId}${collumnNames[j]}${rowNames[i]}`, "black", delay);
+      delay += delayIncrement;
+    }
+  }
+}
+
 function colorTheGameField(data) {
   if (!data.board1 || data.board1 === "null") return;
   for (let i = 0; i < data.board1.length; i = i + 3) {
@@ -144,6 +167,7 @@ function drawOverlay(data) {
 }
 
 function parseMessage(data, socket) {
+  console.log(data);
   if (data.message === "control_on") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "block";
@@ -161,6 +185,14 @@ function parseMessage(data, socket) {
     setTimeout(() => {}, 50);
     drawOverlay(data);
   }
+  if (data.message === "ended") {
+    gameState = "ended";
+    coolMode("grid1");
+    coolMode("grid2");
+  }
+  if (data.message === "waiting") {
+    gameState = "waiting";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -174,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     homeDiv.classList.add("hidden");
     gameDiv.classList.remove("hidden");
 
-    socket = io("http://10.13.4.5:8080");
+    socket = io("http://10.12.1.1:8080");
 
     socket.on("connect", () => {
       socket.emit("joinRoom", { room, username });
@@ -239,5 +271,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-module.exports = { createGameBoard, removeGameBoard, parseMessage, colorTheGameField, drawOverlay };
-
+module.exports = {
+  createGameBoard,
+  removeGameBoard,
+  parseMessage,
+  colorTheGameField,
+  drawOverlay,
+};

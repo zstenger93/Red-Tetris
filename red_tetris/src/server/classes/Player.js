@@ -213,6 +213,7 @@ class Player {
   }
 
   appendLines(count) {
+    this.verticalPosition = -1;
     for (let i = 0; i < count; i++) {
       this.board.shift();
       this.board.push(Array(10).fill(8));
