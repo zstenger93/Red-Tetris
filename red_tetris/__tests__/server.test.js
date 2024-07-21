@@ -33,7 +33,7 @@ describe("socket.io server functionality", () => {
   });
 
   test("should join room and receive control message", (done) => {
-	clientSocket.emit("joinRoom", { room: "testRoom", username: "testUser" });
+	clientSocket.emit("joinRoom", { room: "#testRoom", username: "[testUser]" });
 	clientSocket.on("message", (message) => {
 	  expect(message).toEqual({ message: "control_on" });
 	  done();
