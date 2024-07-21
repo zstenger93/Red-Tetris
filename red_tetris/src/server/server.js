@@ -37,7 +37,7 @@ io.on("connection", (socket) => {
     if (data === "move_left") games[room].moveLeft(socket.id);
     if (data === "move_right") games[room].moveRight(socket.id);
     if (data === "rotate") games[room].rotate(socket.id);
-    if (data === "reverse_rotate") games[room].reverseRotate(socket.id);
+    if (data === "down") games[room].moveDown(socket.id);
   }
 
   // receive message
@@ -72,5 +72,5 @@ io.on("connection", (socket) => {
 // listening socket
 const SOCKET_PORT = 8080;
 socketServer.listen(SOCKET_PORT, () => {
-  console.log(`Socket.IO server listening on http://10.13.4.5:${SOCKET_PORT}`);
+  console.log(`Socket.IO server listening on http://10.12.1.1:${SOCKET_PORT}`);
 });
