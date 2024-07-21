@@ -31,6 +31,7 @@ const colorNames = [
   "#9E2331",
   "#9E7223",
   "#9E4B23",
+  "gray",
 ];
 
 var gameState = "waiting";

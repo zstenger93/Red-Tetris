@@ -70,7 +70,7 @@ class Player {
       let line = this.board[i];
       let isLine = true;
       for (let j = 0; j < line.length; j++) {
-        if (line[j] === 0 || line[j] === 9) {
+        if (line[j] === 0 || line[j] === 8) {
           isLine = false;
           break;
         }
@@ -79,10 +79,12 @@ class Player {
         linesToRemove.push(i);
       }
     }
+    if (linesToRemove.length === 0) return null;
     for (let i = 0; i < linesToRemove.length; i++) {
       this.board.splice(linesToRemove[i], 1);
       this.board.unshift(Array(10).fill(0));
     }
+    if (linesToRemove.length > 0) return linesToRemove.length;
   }
 
   generateSeedValue(seed, input) {
@@ -210,9 +212,16 @@ class Player {
     return true;
   }
 
+  appendLines(count) {
+    for (let i = 0; i < count; i++) {
+      this.board.shift();
+      this.board.push(Array(10).fill(8));
+    }
+  }
+
   moveDown() {
     if (this.currentPiece === null) {
-      return;
+      return null;
     }
 
     if (
@@ -224,15 +233,16 @@ class Player {
       )
     ) {
       this.registerPiece();
-      this.checkAndRemoveLines();
-      if (!this.isAlive) return;
+      let returnVal = this.checkAndRemoveLines();
+      if (!this.isAlive) return null;
       this.currentPieceIndex += 1;
       this.generatePieces(this.seed);
       this.verticalPosition = -1;
       this.horizontalPosition = 4;
-      return;
+      return returnVal;
     }
     this.verticalPosition += 1;
+    return null;
   }
 
   returnBoard() {

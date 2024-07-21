@@ -85,12 +85,19 @@ class Game {
   }
 
   gameLogic() {
+    let player1ReturnVal = null;
+    let player2ReturnVal = null;
     if (this.player1 !== null) {
-      this.player1.moveDown();
+      player1ReturnVal = this.player1.moveDown();
     }
     if (this.player2 !== null) {
-      this.player2.moveDown();
+      player2ReturnVal = this.player2.moveDown();
     }
+    if (player1ReturnVal === null && player2ReturnVal === null) return;
+    if (player1ReturnVal !== null && this.player2 !== null)
+      this.player2.appendLines(player1ReturnVal);
+    if (player2ReturnVal !== null) this.player1.appendLines(player2ReturnVal);
+    this.sendGameState();
   }
 
   sendGameState() {
