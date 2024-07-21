@@ -54,12 +54,6 @@ class Game {
       this.player2 = this.listOfPeopleInRoom[socketId];
   }
 
-  moveDown(socketId) {
-    const player = this.findPlayer(socketId);
-    if (player === null) return;
-    if (player.moveDown()) this.sendGameState();
-  }
-
   removePlayer(socketId) {
     if (this.player1 !== null && this.player1.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];

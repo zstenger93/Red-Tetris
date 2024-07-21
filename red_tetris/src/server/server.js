@@ -37,7 +37,7 @@ io.on("connection", (socket) => {
     if (data === "move_left") games[room].moveLeft(socket.id);
     if (data === "move_right") games[room].moveRight(socket.id);
     if (data === "rotate") games[room].rotate(socket.id);
-    if (data === "down") games[room].moveDown(socket.id);
+    if (data === "reverse_rotate") games[room].reverseRotate(socket.id);
   }
 
   // receive message

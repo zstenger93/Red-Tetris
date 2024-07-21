@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
           socket.emit("message", { message: "rotate" });
         }
         if (event.key === "s") {
-          socket.emit("message", { message: "down" });
+          socket.emit("message", { message: "reverse_rotate" });
         }
       }
     });
