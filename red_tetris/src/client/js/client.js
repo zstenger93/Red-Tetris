@@ -23,15 +23,18 @@ const rowNames = [
 ];
 
 const colorNames = [
-  "#A4343A",
-  "#C2505E",
-  "#69202A",
-  "#D77B86",
-  "#500C18",
-  "#E08C97",
-  "#410912",
-  "#F2A2AE",
+  "rgba(0, 0, 0, 0.2)",
+  "#87239E",
+  "#9E4923",
+  "#9E3323",
+  "#9E237F",
+  "#9E2331",
+  "#9E7223",
+  "#9E4B23",
+  "gray",
 ];
+
+var gameState = "waiting";
 
 function createGameBoard(rows, cols) {
   const board = document.getElementById("tetrisBoard");
@@ -47,13 +50,13 @@ function createGameBoard(rows, cols) {
     tetrisBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
     tetrisBoard.style.width = `${cols * 50}px`;
     tetrisBoard.style.height = `${rows * 50}px`;
-    tetrisBoard.style.border = "1px solid black";
+    tetrisBoard.style.border = "7px solid #2a0000";
     tetrisBoard.style.display = "grid";
     tetrisBoard.style.gridGap = "1px";
-    tetrisBoard.style.backgroundColor = "black";
+    tetrisBoard.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
     for (let i = 0; i < rows * cols; i++) {
       const cell = document.createElement("div");
-      cell.style.backgroundColor = "#A4343A";
+      cell.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
       cell.style.border = "1px solid black";
       cell.style.width = "45px";
       cell.style.height = "45px";
@@ -76,8 +79,8 @@ function createGameBoard(rows, cols) {
     tetrisDashBoard.classList.add("tetris", "dashboard");
     for (let i = 0; i < 16; i++) {
       const cell = document.createElement("div");
-      cell.style.backgroundColor = "#A4343A";
-      cell.style.border = "1px solid black";
+      cell.style.backgroundColor = "black";
+      cell.style.border = "1px solid white";
       cell.style.width = "45px";
       cell.style.height = "45px";
       cell.classList.add("cell");
@@ -141,7 +144,6 @@ function drawOverlay(data) {
 }
 
 function parseMessage(data, socket) {
-  console.log(data);
   if (data.message === "control_on") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "block";
@@ -154,6 +156,7 @@ function parseMessage(data, socket) {
     startButton.style.display = "none";
   }
   if (data.message === "started") {
+    gameState = "started";
     colorTheGameField(data);
     setTimeout(() => {}, 50);
     drawOverlay(data);
@@ -171,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     homeDiv.classList.add("hidden");
     gameDiv.classList.remove("hidden");
 
-    socket = io("http://localhost:8080");
+    socket = io("http://10.13.4.5:8080");
 
     socket.on("connect", () => {
       socket.emit("joinRoom", { room, username });
@@ -180,6 +183,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     socket.on("message", (data) => {
       parseMessage(data, socket);
+    });
+
+    addEventListener("keydown", (event) => {
+      if (gameState === "started") {
+        if (event.key === "a") {
+          socket.emit("message", { message: "move_left" });
+        }
+        if (event.key === "d") {
+          socket.emit("message", { message: "move_right" });
+        }
+        if (event.key === "w") {
+          socket.emit("message", { message: "rotate" });
+        }
+        if (event.key === "s") {
+          socket.emit("message", { message: "reverse_rotate" });
+        }
+      }
     });
   }
 

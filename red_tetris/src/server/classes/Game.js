@@ -13,6 +13,40 @@ class Game {
     console.log("Game created");
   }
 
+  findPlayer(socketId) {
+    if (this.player1 !== null && this.player1.socketId === socketId) {
+      return this.player1;
+    }
+    if (this.player2 !== null && this.player2.socketId === socketId) {
+      return this.player2;
+    }
+    return null;
+  }
+
+  moveLeft(socketId) {
+    const player = this.findPlayer(socketId);
+    if (player === null) return;
+    if (player.moveLeft()) this.sendGameState();
+  }
+
+  moveRight(socketId) {
+    const player = this.findPlayer(socketId);
+    if (player === null) return;
+    player.moveRight();
+  }
+
+  rotate(socketId) {
+    const player = this.findPlayer(socketId);
+    if (player === null) return;
+    if (player.rotate()) this.sendGameState();
+  }
+
+  reverseRotate(socketId) {
+    const player = this.findPlayer(socketId);
+    if (player === null) return;
+    if (player.reverseRotate()) this.sendGameState();
+  }
+
   addPlayer(name, socketId) {
     this.listOfPeopleInRoom[socketId] = new Player(name, socketId);
     if (this.player1 === null) this.player1 = this.listOfPeopleInRoom[socketId];
@@ -51,12 +85,19 @@ class Game {
   }
 
   gameLogic() {
+    let player1ReturnVal = null;
+    let player2ReturnVal = null;
     if (this.player1 !== null) {
-      this.player1.moveDown();
+      player1ReturnVal = this.player1.moveDown();
     }
     if (this.player2 !== null) {
-      this.player2.moveDown();
+      player2ReturnVal = this.player2.moveDown();
     }
+    if (player1ReturnVal === null && player2ReturnVal === null) return;
+    if (player1ReturnVal !== null && this.player2 !== null)
+      this.player2.appendLines(player1ReturnVal);
+    if (player2ReturnVal !== null) this.player1.appendLines(player2ReturnVal);
+    this.sendGameState();
   }
 
   sendGameState() {
@@ -87,13 +128,25 @@ class Game {
   startGame() {
     this.gameState = "started";
     this.roomSeed = Math.floor(Math.random() * 1000);
+    if (this.player1 !== null) this.player1.resetBoard();
+    if (this.player2 !== null) this.player2.resetBoard();
     if (this.player1 !== null) this.player1.generatePieces(this.roomSeed);
     if (this.player2 !== null) this.player2.generatePieces(this.roomSeed);
     this.io.to(this.room).emit("message", { message: this.gameState });
     const gameInterval = setInterval(() => {
+      if (this.player1.checkLose()) {
+        this.endGame();
+        return;
+      }
+      if (this.player2 !== null) {
+        if (this.player2.checkLose()) {
+          this.endGame();
+          return;
+        }
+      }
       this.gameLogic();
       this.sendGameState();
-    }, 1000);
+    }, 250);
     this.gameInterval.push(gameInterval);
   }
 

@@ -45,9 +45,46 @@ class Player {
     this.currentPiece = null;
     this.currentPieceIndex = 0;
     this.gameBoard = [];
-    this.vertialPosition = 2;
-    this.horizontalPosition = 5;
+    this.verticalPosition = -1;
+    this.horizontalPosition = 4;
     this.seed = 0;
+  }
+
+  resetBoard() {
+    this.score = 0;
+    this.board = Array.from({ length: 20 }, () => Array(10).fill(0));
+    this.currentPiece = null;
+    this.nextPiece = null;
+    this.isAlive = true;
+    this.currentPiece = null;
+    this.currentPieceIndex = 0;
+    this.gameBoard = [];
+    this.verticalPosition = -1;
+    this.horizontalPosition = 4;
+    this.seed = 0;
+  }
+
+  checkAndRemoveLines() {
+    let linesToRemove = [];
+    for (let i = 0; i < this.board.length; i++) {
+      let line = this.board[i];
+      let isLine = true;
+      for (let j = 0; j < line.length; j++) {
+        if (line[j] === 0 || line[j] === 8) {
+          isLine = false;
+          break;
+        }
+      }
+      if (isLine) {
+        linesToRemove.push(i);
+      }
+    }
+    if (linesToRemove.length === 0) return null;
+    for (let i = 0; i < linesToRemove.length; i++) {
+      this.board.splice(linesToRemove[i], 1);
+      this.board.unshift(Array(10).fill(0));
+    }
+    if (linesToRemove.length > 0) return linesToRemove.length;
   }
 
   generateSeedValue(seed, input) {
@@ -78,7 +115,11 @@ class Player {
     for (let i = 0; i < this.currentPiece.shape.length; i++) {
       for (let j = 0; j < this.currentPiece.shape[i].length; j++) {
         if (this.currentPiece.shape[i][j] !== 0) {
-          this.board[i + this.vertialPosition][j + this.horizontalPosition] =
+          if (this.verticalPosition <= 0) {
+            this.isAlive = false;
+            return;
+          }
+          this.board[i + this.verticalPosition][j + this.horizontalPosition] =
             this.currentPiece.shape[i][j];
         }
       }
@@ -105,26 +146,103 @@ class Player {
     return false;
   }
 
+  moveLeft() {
+    if (this.currentPiece === null) return;
+    if (
+      this.checkCollision(
+        this.board,
+        this.currentPiece.shape,
+        this.verticalPosition,
+        this.horizontalPosition - 1
+      )
+    ) {
+      return false;
+    }
+    this.horizontalPosition -= 1;
+    return true;
+  }
+
+  moveRight() {
+    if (this.currentPiece === null) return;
+    if (
+      this.checkCollision(
+        this.board,
+        this.currentPiece.shape,
+        this.verticalPosition,
+        this.horizontalPosition + 1
+      )
+    ) {
+      return false;
+    }
+    this.horizontalPosition += 1;
+    return true;
+  }
+
+  rotate() {
+    if (this.currentPiece === null) return;
+    this.currentPiece.rotate();
+    if (
+      this.checkCollision(
+        this.board,
+        this.currentPiece.shape,
+        this.verticalPosition,
+        this.horizontalPosition
+      )
+    ) {
+      this.currentPiece.reverseRotate();
+      return false;
+    }
+    return true;
+  }
+
+  reverseRotate() {
+    if (this.currentPiece === null) return;
+    this.currentPiece.reverseRotate();
+    if (
+      this.checkCollision(
+        this.board,
+        this.currentPiece.shape,
+        this.verticalPosition,
+        this.horizontalPosition
+      )
+    ) {
+      this.currentPiece.rotate();
+      return false;
+    }
+    return true;
+  }
+
+  appendLines(count) {
+    for (let i = 0; i < count; i++) {
+      this.board.shift();
+      this.board.push(Array(10).fill(8));
+    }
+  }
+
   moveDown() {
     if (this.currentPiece === null) {
-      return;
+      return null;
     }
 
     if (
       this.checkCollision(
         this.board,
         this.currentPiece.shape,
-        this.vertialPosition + 1,
+        this.verticalPosition + 1,
         this.horizontalPosition
       )
     ) {
       this.registerPiece();
+      let returnVal = this.checkAndRemoveLines();
+      if (!this.isAlive) return null;
       this.currentPieceIndex += 1;
       this.generatePieces(this.seed);
-      this.vertialPosition = 0;
-      return;
+      this.verticalPosition = -1;
+      this.horizontalPosition = 4;
+      return returnVal;
     }
-    this.vertialPosition += 1;
+    this.verticalPosition += 1;
+    return null;
   }
 
   returnBoard() {
@@ -141,13 +259,22 @@ class Player {
     let returnMessage = "";
     for (let i = 0; i < this.currentPiece.shape.length; i++) {
       for (let j = 0; j < this.currentPiece.shape[i].length; j++) {
+        if (this.verticalPosition + i < 0) continue;
+        if (this.currentPiece.shape[i][j] === 0) continue;
         returnMessage +=
           this.currentPiece.shape[i][j] +
           collumnNames[j + this.horizontalPosition] +
-          rowNames[i + this.vertialPosition];
+          rowNames[i + this.verticalPosition];
       }
     }
     return returnMessage;
+  }
+
+  checkLose() {
+    if (!this.isAlive) {
+      return true;
+    }
+    return false;
   }
 }
 
