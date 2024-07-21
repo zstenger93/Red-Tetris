@@ -23,14 +23,14 @@ const rowNames = [
 ];
 
 const colorNames = [
-  "#A4343A",
-  "#C2505E",
-  "#69202A",
-  "#D77B86",
-  "#500C18",
-  "#E08C97",
-  "#410912",
-  "#F2A2AE",
+  "black",
+  "#87239E",
+  "#9E4923",
+  "#9E3323",
+  "#9E237F",
+  "#9E2331",
+  "#9E7223",
+  "#9E4B23",
 ];
 
 function createGameBoard(rows, cols) {
@@ -47,13 +47,13 @@ function createGameBoard(rows, cols) {
     tetrisBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
     tetrisBoard.style.width = `${cols * 50}px`;
     tetrisBoard.style.height = `${rows * 50}px`;
-    tetrisBoard.style.border = "1px solid black";
+    tetrisBoard.style.border = "1px solid white";
     tetrisBoard.style.display = "grid";
     tetrisBoard.style.gridGap = "1px";
     tetrisBoard.style.backgroundColor = "black";
     for (let i = 0; i < rows * cols; i++) {
       const cell = document.createElement("div");
-      cell.style.backgroundColor = "#A4343A";
+      cell.style.backgroundColor = "black";
       cell.style.border = "1px solid black";
       cell.style.width = "45px";
       cell.style.height = "45px";
@@ -76,8 +76,8 @@ function createGameBoard(rows, cols) {
     tetrisDashBoard.classList.add("tetris", "dashboard");
     for (let i = 0; i < 16; i++) {
       const cell = document.createElement("div");
-      cell.style.backgroundColor = "#A4343A";
-      cell.style.border = "1px solid black";
+      cell.style.backgroundColor = "black";
+      cell.style.border = "1px solid white";
       cell.style.width = "45px";
       cell.style.height = "45px";
       cell.classList.add("cell");

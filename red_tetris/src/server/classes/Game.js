@@ -91,9 +91,19 @@ class Game {
     if (this.player2 !== null) this.player2.generatePieces(this.roomSeed);
     this.io.to(this.room).emit("message", { message: this.gameState });
     const gameInterval = setInterval(() => {
+      if (this.player1.checkLose()) {
+        this.endGame();
+        return;
+      }
+      if (this.player2 !== null) {
+        if (this.player2.checkLose()) {
+          this.endGame();
+          return;
+        }
+      }
       this.gameLogic();
       this.sendGameState();
-    }, 1000);
+    }, 100);
     this.gameInterval.push(gameInterval);
   }
 
