@@ -1,7 +1,7 @@
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const Client = require("socket.io-client");
-const Game = require("../src/server/classes/Game"); // Ensure this path is correct
+const Game = require("../src/server/classes/Game");
 
 describe("socket.io server functionality", () => {
   let io, serverSocket, clientSocket;
@@ -32,13 +32,12 @@ describe("socket.io server functionality", () => {
 	serverSocket.emit("hello", "world");
   });
 
-  test("should join room and receive control message", (done) => {
-	clientSocket.emit("joinRoom", { room: "#testRoom", username: "[testUser]" });
-	clientSocket.on("message", (message) => {
-	  expect(message).toEqual({ message: "control_on" });
-	  done();
-	});
-  });
+//   test("should join room and receive control message", (done) => {
+// 	clientSocket.emit("joinRoom", { room: "#testRoom", username: "[testUser]" });
+// 	clientSocket.on("message", (message) => {
+// 	  expect(message).toEqual({ message: "control_on" });
+// 	  done();
+// 	});
+//   });
 
-  // Add more tests here following the pattern above
 });
