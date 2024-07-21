@@ -26,7 +26,7 @@ class Game {
   moveLeft(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    player.moveLeft();
+    if (player.moveLeft()) this.sendGameState();
   }
 
   moveRight(socketId) {
@@ -38,13 +38,13 @@ class Game {
   rotate(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    player.rotate();
+    if (player.rotate()) this.sendGameState();
   }
 
   reverseRotate(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    player.reverseRotate();
+    if (player.reverseRotate()) this.sendGameState();
   }
 
   addPlayer(name, socketId) {

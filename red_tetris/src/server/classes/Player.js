@@ -46,7 +46,7 @@ class Player {
     this.currentPieceIndex = 0;
     this.gameBoard = [];
     this.verticalPosition = -1;
-    this.horizontalPosition = 5;
+    this.horizontalPosition = 4;
     this.seed = 0;
   }
 
@@ -109,6 +109,46 @@ class Player {
     return false;
   }
 
+  moveLeft() {
+    if (this.currentPiece === null) return;
+    if (
+      this.checkCollision(
+        this.board,
+        this.currentPiece.shape,
+        this.verticalPosition,
+        this.horizontalPosition - 1
+      )
+    ) {
+      return false;
+    }
+    this.horizontalPosition -= 1;
+    return true;
+  }
+
+  moveRight() {
+    if (this.currentPiece === null) return;
+    if (
+      this.checkCollision(
+        this.board,
+        this.currentPiece.shape,
+        this.verticalPosition,
+        this.horizontalPosition + 1
+      )
+    ) {
+      return false;
+    }
+    this.horizontalPosition += 1;
+    return true;
+  }
+
+  rotate() {
+    if (this.currentPiece === null) return;
+  }
+
+  reverseRotate() {
+    if (this.currentPiece === null) return;
+  }
+
   moveDown() {
     if (this.currentPiece === null) {
       return;
@@ -127,6 +167,7 @@ class Player {
       this.currentPieceIndex += 1;
       this.generatePieces(this.seed);
       this.verticalPosition = -1;
+      this.horizontalPosition = 4;
       return;
     }
     this.verticalPosition += 1;
