@@ -50,6 +50,41 @@ class Player {
     this.seed = 0;
   }
 
+  resetBoard() {
+    this.score = 0;
+    this.board = Array.from({ length: 20 }, () => Array(10).fill(0));
+    this.currentPiece = null;
+    this.nextPiece = null;
+    this.isAlive = true;
+    this.currentPiece = null;
+    this.currentPieceIndex = 0;
+    this.gameBoard = [];
+    this.verticalPosition = -1;
+    this.horizontalPosition = 4;
+    this.seed = 0;
+  }
+
+  checkAndRemoveLines() {
+    let linesToRemove = [];
+    for (let i = 0; i < this.board.length; i++) {
+      let line = this.board[i];
+      let isLine = true;
+      for (let j = 0; j < line.length; j++) {
+        if (line[j] === 0 || line[j] === 9) {
+          isLine = false;
+          break;
+        }
+      }
+      if (isLine) {
+        linesToRemove.push(i);
+      }
+    }
+    for (let i = 0; i < linesToRemove.length; i++) {
+      this.board.splice(linesToRemove[i], 1);
+      this.board.unshift(Array(10).fill(0));
+    }
+  }
+
   generateSeedValue(seed, input) {
     return (((seed + input) * 9301 + 49297) % 233280) % pieces.length;
   }
@@ -143,10 +178,36 @@ class Player {
 
   rotate() {
     if (this.currentPiece === null) return;
+    this.currentPiece.rotate();
+    if (
+      this.checkCollision(
+        this.board,
+        this.currentPiece.shape,
+        this.verticalPosition,
+        this.horizontalPosition
+      )
+    ) {
+      this.currentPiece.reverseRotate();
+      return false;
+    }
+    return true;
   }
 
   reverseRotate() {
     if (this.currentPiece === null) return;
+    this.currentPiece.reverseRotate();
+    if (
+      this.checkCollision(
+        this.board,
+        this.currentPiece.shape,
+        this.verticalPosition,
+        this.horizontalPosition
+      )
+    ) {
+      this.currentPiece.rotate();
+      return false;
+    }
+    return true;
   }
 
   moveDown() {
@@ -163,6 +224,7 @@ class Player {
       )
     ) {
       this.registerPiece();
+      this.checkAndRemoveLines();
       if (!this.isAlive) return;
       this.currentPieceIndex += 1;
       this.generatePieces(this.seed);

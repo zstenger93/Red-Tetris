@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
     homeDiv.classList.add("hidden");
     gameDiv.classList.remove("hidden");
 
-    socket = io("http://localhost:8080");
+    socket = io("http://10.13.4.5:8080");
 
     socket.on("connect", () => {
       socket.emit("joinRoom", { room, username });
