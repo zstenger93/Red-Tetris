@@ -23,7 +23,7 @@ const rowNames = [
 ];
 
 const colorNames = [
-  "black",
+  "rgba(0, 0, 0, 0.2)",
   "#87239E",
   "#9E4923",
   "#9E3323",
@@ -49,13 +49,13 @@ function createGameBoard(rows, cols) {
     tetrisBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
     tetrisBoard.style.width = `${cols * 50}px`;
     tetrisBoard.style.height = `${rows * 50}px`;
-    tetrisBoard.style.border = "1px solid white";
+    tetrisBoard.style.border = "7px solid #2a0000";
     tetrisBoard.style.display = "grid";
     tetrisBoard.style.gridGap = "1px";
-    tetrisBoard.style.backgroundColor = "black";
+    tetrisBoard.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
     for (let i = 0; i < rows * cols; i++) {
       const cell = document.createElement("div");
-      cell.style.backgroundColor = "black";
+      cell.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
       cell.style.border = "1px solid black";
       cell.style.width = "45px";
       cell.style.height = "45px";
