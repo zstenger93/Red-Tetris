@@ -5,7 +5,16 @@ global.document = {
         add: jest.fn(),
         remove: jest.fn(),
       },
+      appendChild: jest.fn(),
+      style: {},
     };
+
+    if (id === "grid1") {
+      return {
+        ...commonMock,
+        innerHTML: "",
+      };
+    }
 
     if (id === "tetrisBoard") {
       return {
@@ -22,7 +31,13 @@ global.document = {
         addEventListener: jest.fn(),
       };
     }
-    if (id === "home" || id === "game" || id === "join" || id === "username" || id === "room") {
+    if (
+      id === "home" ||
+      id === "game" ||
+      id === "join" ||
+      id === "username" ||
+      id === "room"
+    ) {
       if (id === "join") {
         return {
           ...commonMock,
@@ -44,7 +59,11 @@ global.document = {
           value: "test",
         };
       }
-      return commonMock;
+      return {
+        ...commonMock,
+        style: {},
+        textContent: "",
+      };
     }
     return null;
   }),
@@ -61,7 +80,7 @@ global.document = {
   addEventListener: jest.fn(),
   body: {
     appendChild: jest.fn(),
-    innerHTML: '',
+    innerHTML: "",
   },
   dispatchEvent: jest.fn(),
 };
@@ -78,9 +97,70 @@ global.window = {
   addEventListener: jest.fn(),
   dispatchEvent: jest.fn(),
   location: {
-    hash: '',
+    hash: "",
   },
   history: {
     pushState: jest.fn(),
   },
+  MouseEvent: function (type, options = {}) {
+    const event = document.createEvent("MouseEvent");
+    event.initMouseEvent(
+      type,
+      options.bubbles,
+      options.cancelable,
+      options.view,
+      options.detail,
+      options.screenX,
+      options.screenY,
+      options.clientX,
+      options.clientY,
+      options.ctrlKey,
+      options.altKey,
+      options.shiftKey,
+      options.metaKey,
+      options.button,
+      options.relatedTarget
+    );
+    return event;
+  },
 };
+
+global.KeyboardEvent = class extends Event {
+  constructor(type, keyboardEventInit = {}) {
+    super(type, keyboardEventInit);
+    this.key = keyboardEventInit.key || "";
+    this.code = keyboardEventInit.code || "";
+    this.altKey = keyboardEventInit.altKey || false;
+    this.ctrlKey = keyboardEventInit.ctrlKey || false;
+    this.shiftKey = keyboardEventInit.shiftKey || false;
+    this.metaKey = keyboardEventInit.metaKey || false;
+    this.repeat = keyboardEventInit.repeat || false;
+  }
+};
+
+global.document.addEventListener = jest.fn((event, callback) => {
+  if (event === "keydown" || event === "keyup") {
+    global.triggerKeyEvent = (
+      type,
+      key,
+      code,
+      altKey = false,
+      ctrlKey = false,
+      shiftKey = false,
+      metaKey = false,
+      repeat = false
+    ) => {
+      const event = new KeyboardEvent(type, {
+        key: key,
+        code: code,
+        altKey: altKey,
+        ctrlKey: ctrlKey,
+        shiftKey: shiftKey,
+        metaKey: metaKey,
+        repeat: repeat,
+      });
+      callback(event);
+    };
+  } else {
+  }
+});

@@ -277,4 +277,5 @@ module.exports = {
   parseMessage,
   colorTheGameField,
   drawOverlay,
+  coolMode,
 };
