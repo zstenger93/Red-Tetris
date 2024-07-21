@@ -33,6 +33,8 @@ const colorNames = [
   "#9E4B23",
 ];
 
+var gameState = "waiting";
+
 function createGameBoard(rows, cols) {
   const board = document.getElementById("tetrisBoard");
   board.style.display = "flex";
@@ -141,7 +143,6 @@ function drawOverlay(data) {
 }
 
 function parseMessage(data, socket) {
-  console.log(data);
   if (data.message === "control_on") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "block";
@@ -154,6 +155,7 @@ function parseMessage(data, socket) {
     startButton.style.display = "none";
   }
   if (data.message === "started") {
+    gameState = "started";
     colorTheGameField(data);
     setTimeout(() => {}, 50);
     drawOverlay(data);
@@ -180,6 +182,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     socket.on("message", (data) => {
       parseMessage(data, socket);
+    });
+
+    addEventListener("keydown", (event) => {
+      if (gameState === "started") {
+        if (event.key === "a") {
+          socket.emit("message", { message: "move_left" });
+        }
+        if (event.key === "d") {
+          socket.emit("message", { message: "move_right" });
+        }
+        if (event.key === "w") {
+          socket.emit("message", { message: "rotate" });
+        }
+        if (event.key === "s") {
+          socket.emit("message", { message: "reverse_rotate" });
+        }
+      }
     });
   }
 

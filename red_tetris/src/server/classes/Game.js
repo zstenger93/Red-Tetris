@@ -13,6 +13,40 @@ class Game {
     console.log("Game created");
   }
 
+  findPlayer(socketId) {
+    if (this.player1 !== null && this.player1.socketId === socketId) {
+      return this.player1;
+    }
+    if (this.player2 !== null && this.player2.socketId === socketId) {
+      return this.player2;
+    }
+    return null;
+  }
+
+  moveLeft(socketId) {
+    const player = this.findPlayer(socketId);
+    if (player === null) return;
+    player.moveLeft();
+  }
+
+  moveRight(socketId) {
+    const player = this.findPlayer(socketId);
+    if (player === null) return;
+    player.moveRight();
+  }
+
+  rotate(socketId) {
+    const player = this.findPlayer(socketId);
+    if (player === null) return;
+    player.rotate();
+  }
+
+  reverseRotate(socketId) {
+    const player = this.findPlayer(socketId);
+    if (player === null) return;
+    player.reverseRotate();
+  }
+
   addPlayer(name, socketId) {
     this.listOfPeopleInRoom[socketId] = new Player(name, socketId);
     if (this.player1 === null) this.player1 = this.listOfPeopleInRoom[socketId];
