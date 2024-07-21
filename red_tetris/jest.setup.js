@@ -5,7 +5,16 @@ global.document = {
         add: jest.fn(),
         remove: jest.fn(),
       },
+      appendChild: jest.fn(),
+      style: {},
     };
+
+    if (id === "grid1") {
+      return {
+        ...commonMock,
+        innerHTML: "",
+      };
+    }
 
     if (id === "tetrisBoard") {
       return {

@@ -4,6 +4,7 @@ const {
   parseMessage,
   colorTheGameField,
   drawOverlay,
+  coolMode,
 } = require("../src/client/js/client");
 const { JSDOM } = require("jsdom");
 const jsdom = new JSDOM("<!doctype html><html><body></body></html>");
@@ -310,5 +311,63 @@ describe("Keydown events for game controls", () => {
   test('Pressing "w" emits "rotate"', () => {
     simulateKeydown("w");
     expect(emitSpy).toHaveBeenCalledWith("message", { message: "rotate" });
+  });
+});
+
+describe("coolMode", () => {
+  let dom;
+  let document;
+
+  const collumnNames = ["K", "A", "R", "T", "U", "P", "E", "L", "I", "S"];
+  const rowNames = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+  ];
+
+  beforeEach(() => {
+    dom = new JSDOM(`<!DOCTYPE html><body><div id="tetrisBoard"></div></body>`);
+    document = dom.window.document;
+    global.document = document;
+
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  test("should color all cells in grid black after calling coolMode", () => {
+    createGameBoard(20, 10);
+
+    const gridId = "grid1";
+    coolMode(gridId);
+
+    jest.runAllTimers();
+
+    for (let i = 0; i < 20; i++) {
+      for (let j = 0; j < 10; j++) {
+        const cellId = `${gridId}${collumnNames[j]}${rowNames[i]}`;
+        const cell = document.getElementById(cellId);
+        expect(cell.style.backgroundColor).toBe("black");
+      }
+    }
   });
 });
