@@ -45,7 +45,7 @@ class Player {
     this.currentPiece = null;
     this.currentPieceIndex = 0;
     this.gameBoard = [];
-    this.vertialPosition = 2;
+    this.verticalPosition = -1;
     this.horizontalPosition = 5;
     this.seed = 0;
   }
@@ -78,7 +78,11 @@ class Player {
     for (let i = 0; i < this.currentPiece.shape.length; i++) {
       for (let j = 0; j < this.currentPiece.shape[i].length; j++) {
         if (this.currentPiece.shape[i][j] !== 0) {
-          this.board[i + this.vertialPosition][j + this.horizontalPosition] =
+          if (this.verticalPosition <= 0) {
+            this.isAlive = false;
+            return;
+          }
+          this.board[i + this.verticalPosition][j + this.horizontalPosition] =
             this.currentPiece.shape[i][j];
         }
       }
@@ -114,17 +118,18 @@ class Player {
       this.checkCollision(
         this.board,
         this.currentPiece.shape,
-        this.vertialPosition + 1,
+        this.verticalPosition + 1,
         this.horizontalPosition
       )
     ) {
       this.registerPiece();
+      if (!this.isAlive) return;
       this.currentPieceIndex += 1;
       this.generatePieces(this.seed);
-      this.vertialPosition = 0;
+      this.verticalPosition = -1;
       return;
     }
-    this.vertialPosition += 1;
+    this.verticalPosition += 1;
   }
 
   returnBoard() {
@@ -141,13 +146,22 @@ class Player {
     let returnMessage = "";
     for (let i = 0; i < this.currentPiece.shape.length; i++) {
       for (let j = 0; j < this.currentPiece.shape[i].length; j++) {
+        if (this.verticalPosition + i < 0) continue;
+        if (this.currentPiece.shape[i][j] === 0) continue;
         returnMessage +=
           this.currentPiece.shape[i][j] +
           collumnNames[j + this.horizontalPosition] +
-          rowNames[i + this.vertialPosition];
+          rowNames[i + this.verticalPosition];
       }
     }
     return returnMessage;
+  }
+
+  checkLose() {
+    if (!this.isAlive) {
+      return true;
+    }
+    return false;
   }
 }
 
