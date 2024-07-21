@@ -72,5 +72,5 @@ io.on("connection", (socket) => {
 // listening socket
 const SOCKET_PORT = 8080;
 socketServer.listen(SOCKET_PORT, () => {
-  console.log(`Socket.IO server listening on http://localhost:${SOCKET_PORT}`);
+  console.log(`Socket.IO server listening on http://10.13.4.5:${SOCKET_PORT}`);
 });

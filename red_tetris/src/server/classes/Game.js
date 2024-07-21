@@ -121,6 +121,8 @@ class Game {
   startGame() {
     this.gameState = "started";
     this.roomSeed = Math.floor(Math.random() * 1000);
+    if (this.player1 !== null) this.player1.resetBoard();
+    if (this.player2 !== null) this.player2.resetBoard();
     if (this.player1 !== null) this.player1.generatePieces(this.roomSeed);
     if (this.player2 !== null) this.player2.generatePieces(this.roomSeed);
     this.io.to(this.room).emit("message", { message: this.gameState });
@@ -137,7 +139,7 @@ class Game {
       }
       this.gameLogic();
       this.sendGameState();
-    }, 100);
+    }, 250);
     this.gameInterval.push(gameInterval);
   }
 
