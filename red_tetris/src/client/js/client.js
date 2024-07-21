@@ -219,5 +219,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-module.exports = { createGameBoard, removeGameBoard, parseMessage };
+module.exports = { createGameBoard, removeGameBoard, parseMessage, colorTheGameField, drawOverlay };
 
