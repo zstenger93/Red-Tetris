@@ -2,6 +2,7 @@ const path = require("path");
 const http = require("http");
 const { Server } = require("socket.io");
 const Game = require("./classes/Game");
+require("dotenv").config();
 
 var games = {};
 
@@ -70,7 +71,8 @@ io.on("connection", (socket) => {
 });
 
 // listening socket
-const SOCKET_PORT = 8080;
+const SOCKET_PORT = process.env.SOCKET_PORT || 8080;
+const IP = process.env.IP || "localhost";
 socketServer.listen(SOCKET_PORT, () => {
-  console.log(`Socket.IO server listening on http://10.12.1.1:${SOCKET_PORT}`);
+  console.log(`Socket.IO server listening on http://${IP}:${SOCKET_PORT}`);
 });

@@ -1,7 +1,3 @@
-const { createStore } = require("redux");
-
-const store = createStore(gameReducer);
-
 const collumnNames = ["K", "A", "R", "T", "U", "P", "E", "L", "I", "S"];
 const rowNames = [
   "A",
@@ -205,8 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function navigateToGame(username, room) {
     homeDiv.classList.add("hidden");
     gameDiv.classList.remove("hidden");
-
-    socket = io("http://10.12.1.1:8080");
+    const serverUrl = `http://{{IP}}:{{PORT}}`;
+    socket = io(serverUrl);
 
     socket.on("connect", () => {
       socket.emit("joinRoom", { room, username });
@@ -270,11 +266,3 @@ document.addEventListener("DOMContentLoaded", () => {
     navigateToGame(playerName, room);
   }
 });
-
-module.exports = {
-  createGameBoard,
-  removeGameBoard,
-  parseMessage,
-  colorTheGameField,
-  drawOverlay,
-};
