@@ -182,34 +182,69 @@ class Player {
     if (this.currentPiece === null) return;
     this.currentPiece.rotate();
     if (
-      this.checkCollision(
+      !this.checkCollision(
         this.board,
         this.currentPiece.shape,
         this.verticalPosition,
         this.horizontalPosition
       )
     ) {
-      this.currentPiece.reverseRotate();
-      return false;
+      return true;
     }
-    return true;
+    for (
+      let i = -1 * this.currentPiece.shape.length;
+      i >= this.currentPiece.shape.length;
+      i--
+    ) {
+      if (
+        !this.checkCollision(
+          this.board,
+          this.currentPiece.shape,
+          this.verticalPosition + i,
+          this.horizontalPosition
+        )
+      ) {
+        this.verticalPosition += i;
+        return true;
+      }
+    }
+    this.currentPiece.reverseRotate();
+    return false;
   }
 
   reverseRotate() {
     if (this.currentPiece === null) return;
     this.currentPiece.reverseRotate();
     if (
-      this.checkCollision(
+      !this.checkCollision(
         this.board,
         this.currentPiece.shape,
         this.verticalPosition,
         this.horizontalPosition
       )
     ) {
-      this.currentPiece.rotate();
-      return false;
+      return true;
     }
-    return true;
+
+    for (
+      let i = -1 * this.currentPiece.shape.length;
+      i >= this.currentPiece.shape.length;
+      i--
+    ) {
+      if (
+        !this.checkCollision(
+          this.board,
+          this.currentPiece.shape,
+          this.verticalPosition + i,
+          this.horizontalPosition
+        )
+      ) {
+        this.verticalPosition += i;
+        return true;
+      }
+    }
+    this.currentPiece.rotate();
+    return false;
   }
 
   appendLines(count) {
