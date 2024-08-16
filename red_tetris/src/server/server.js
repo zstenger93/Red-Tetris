@@ -73,6 +73,8 @@ io.on("connection", (socket) => {
 // listening socket
 const SOCKET_PORT = process.env.SOCKET_PORT || 8080;
 const IP = process.env.IP || "localhost";
+const WEBSERVER_PORT = process.env.WEBSERVER_PORT || 8000;
 socketServer.listen(SOCKET_PORT, () => {
   console.log(`Socket.IO server listening on http://${IP}:${SOCKET_PORT}`);
+  console.log(`Server on http://${IP}:${WEBSERVER_PORT}`);
 });
