@@ -182,37 +182,86 @@ class Player {
     if (this.currentPiece === null) return;
     this.currentPiece.rotate();
     if (
-      this.checkCollision(
+      !this.checkCollision(
         this.board,
         this.currentPiece.shape,
         this.verticalPosition,
         this.horizontalPosition
       )
     ) {
-      this.currentPiece.reverseRotate();
-      return false;
+      return true;
     }
-    return true;
+    if (this.horizontalPosition < collumnNames.length / 2) {
+      for (let i = 0; i < this.currentPiece.shape.length; i++) {
+        if (
+          !this.checkCollision(
+            this.board,
+            this.currentPiece.shape,
+            this.verticalPosition,
+            this.horizontalPosition + i
+          )
+        ) {
+          this.horizontalPosition += i;
+          return true;
+        }
+      }
+    } else {
+      for (let i = 0; i > -1 * this.currentPiece.shape.length; i--) {
+        if (
+          !this.checkCollision(
+            this.board,
+            this.currentPiece.shape,
+            this.verticalPosition,
+            this.horizontalPosition + i
+          )
+        ) {
+          this.horizontalPosition += i;
+          return true;
+        }
+      }
+    }
+    this.currentPiece.reverseRotate();
+    return false;
   }
 
   reverseRotate() {
     if (this.currentPiece === null) return;
     this.currentPiece.reverseRotate();
-    if (
-      this.checkCollision(
-        this.board,
-        this.currentPiece.shape,
-        this.verticalPosition,
-        this.horizontalPosition
-      )
-    ) {
-      this.currentPiece.rotate();
-      return false;
+    if (this.horizontalPosition < collumnNames.length / 2) {
+      for (let i = 0; i < this.currentPiece.shape.length; i++) {
+        if (
+          !this.checkCollision(
+            this.board,
+            this.currentPiece.shape,
+            this.verticalPosition,
+            this.horizontalPosition + i
+          )
+        ) {
+          this.horizontalPosition += i;
+          return true;
+        }
+      }
+    } else {
+      for (let i = 0; i > -1 * this.currentPiece.shape.length; i--) {
+        if (
+          !this.checkCollision(
+            this.board,
+            this.currentPiece.shape,
+            this.verticalPosition,
+            this.horizontalPosition + i
+          )
+        ) {
+          this.horizontalPosition += i;
+          return true;
+        }
+      }
     }
-    return true;
+    this.currentPiece.rotate();
+    return false;
   }
 
   appendLines(count) {
+    this.verticalPosition = -1;
     for (let i = 0; i < count; i++) {
       this.board.shift();
       this.board.push(Array(10).fill(8));

@@ -146,7 +146,7 @@ class Game {
       }
       this.gameLogic();
       this.sendGameState();
-    }, 250);
+    }, 600);
     this.gameInterval.push(gameInterval);
   }
 
@@ -154,11 +154,26 @@ class Game {
 
   endGame() {
     this.gameState = "ended";
+    if (this.player2 !== null) {
+      this.io.to(this.room).emit("message", {
+        message: this.gameState,
+        winner: this.player1.checkLose()
+          ? this.player1.name
+          : this.player2.name,
+      });
+    } else {
+      this.io.to(this.room).emit("message", {
+        message: this.gameState,
+        winner: this.player1.name,
+      });
+    }
     for (let i = 0; i < this.gameInterval.length; i++) {
       clearInterval(this.gameInterval[i]);
     }
     this.gameInterval = [];
     this.gameState = "waiting";
+    this.io.to(this.room).emit("message", { message: this.gameState });
+    this.io.to(this.room).emit("message", { message: "control_on" });
   }
 }
 

@@ -69,10 +69,10 @@ function createGameBoard(rows, cols) {
     board.appendChild(tetrisBoard);
   }
 
-  function createDashBoard() {
+  function createDashBoard(id) {
     const tetrisPanel = document.createElement("div");
     const tetrisDashBoard = document.createElement("div");
-    tetrisDashBoard.id = "tetrisDashBoard";
+    tetrisDashBoard.id = id;
     tetrisDashBoard.style.display = "grid";
     tetrisDashBoard.style.gridTemplateColumns = "repeat(4, 1fr)";
     tetrisDashBoard.style.gridTemplateRows = "repeat(4, 1fr)";
@@ -87,26 +87,48 @@ function createGameBoard(rows, cols) {
       cell.id = `dashboard_cell_${i}`;
       tetrisDashBoard.appendChild(cell);
     }
-    const button = document.createElement("button");
-    button.id = "startButton";
-    button.style.display = "none";
-    button.textContent = "Start Game";
-    button.style.width = "200px";
-    button.style.height = "50px";
     tetrisPanel.appendChild(tetrisDashBoard);
-    tetrisPanel.appendChild(button);
+    if (id === "tetrisDashBoard1") {
+      const button = document.createElement("button");
+      button.id = "startButton";
+      button.style.display = "none";
+      button.textContent = "Start Game";
+      button.style.width = "200px";
+      button.style.height = "50px";
+      tetrisPanel.appendChild(button);
+    }
     board.appendChild(tetrisPanel);
   }
 
   board.innerHTML = "";
-  createDashBoard();
+  createDashBoard("tetrisDashBoard1");
   createGrid("grid1");
   createGrid("grid2");
+  createDashBoard("tetrisDashBoard2");
 }
 
 function removeGameBoard() {
   const board = document.getElementById("tetrisBoard");
   board.innerHTML = "";
+}
+
+function coolMode(gridId) {
+  let delay = 0;
+  const delayIncrement = 30;
+
+  function colorCell(cellId, color) {
+    setTimeout(() => {
+      const cell = document.getElementById(cellId);
+      cell.style.backgroundColor = color;
+    }, delay);
+  }
+
+  for (let i = 0; i < 20; i++) {
+    for (let j = 0; j < 10; j++) {
+      colorCell(`${gridId}${collumnNames[j]}${rowNames[i]}`, "black", delay);
+      delay += delayIncrement;
+    }
+  }
 }
 
 function colorTheGameField(data) {
@@ -144,6 +166,7 @@ function drawOverlay(data) {
 }
 
 function parseMessage(data, socket) {
+  console.log(data);
   if (data.message === "control_on") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "block";
@@ -161,6 +184,14 @@ function parseMessage(data, socket) {
     setTimeout(() => {}, 50);
     drawOverlay(data);
   }
+  if (data.message === "ended") {
+    gameState = "ended";
+    coolMode("grid1");
+    coolMode("grid2");
+  }
+  if (data.message === "waiting") {
+    gameState = "waiting";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -173,8 +204,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function navigateToGame(username, room) {
     homeDiv.classList.add("hidden");
     gameDiv.classList.remove("hidden");
-
-    socket = io("http://10.13.4.5:8080");
+    const serverUrl = `http://{{IP}}:{{PORT}}`;
+    socket = io(serverUrl);
 
     socket.on("connect", () => {
       socket.emit("joinRoom", { room, username });
@@ -238,6 +269,3 @@ document.addEventListener("DOMContentLoaded", () => {
     navigateToGame(playerName, room);
   }
 });
-
-module.exports = { createGameBoard, removeGameBoard, parseMessage, colorTheGameField, drawOverlay };
-
