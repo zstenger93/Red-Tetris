@@ -69,10 +69,10 @@ function createGameBoard(rows, cols) {
     board.appendChild(tetrisBoard);
   }
 
-  function createDashBoard() {
+  function createDashBoard(id) {
     const tetrisPanel = document.createElement("div");
     const tetrisDashBoard = document.createElement("div");
-    tetrisDashBoard.id = "tetrisDashBoard";
+    tetrisDashBoard.id = id;
     tetrisDashBoard.style.display = "grid";
     tetrisDashBoard.style.gridTemplateColumns = "repeat(4, 1fr)";
     tetrisDashBoard.style.gridTemplateRows = "repeat(4, 1fr)";
@@ -87,21 +87,24 @@ function createGameBoard(rows, cols) {
       cell.id = `dashboard_cell_${i}`;
       tetrisDashBoard.appendChild(cell);
     }
-    const button = document.createElement("button");
-    button.id = "startButton";
-    button.style.display = "none";
-    button.textContent = "Start Game";
-    button.style.width = "200px";
-    button.style.height = "50px";
     tetrisPanel.appendChild(tetrisDashBoard);
-    tetrisPanel.appendChild(button);
+    if (id === "tetrisDashBoard1") {
+      const button = document.createElement("button");
+      button.id = "startButton";
+      button.style.display = "none";
+      button.textContent = "Start Game";
+      button.style.width = "200px";
+      button.style.height = "50px";
+      tetrisPanel.appendChild(button);
+    }
     board.appendChild(tetrisPanel);
   }
 
   board.innerHTML = "";
-  createDashBoard();
+  createDashBoard("tetrisDashBoard1");
   createGrid("grid1");
   createGrid("grid2");
+  createDashBoard("tetrisDashBoard2");
 }
 
 function removeGameBoard() {
