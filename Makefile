@@ -7,3 +7,6 @@ install:
 
 run:
 	cd red_tetris && npm run start
+
+get_ip:
+	@ipconfig getifaddr en0
