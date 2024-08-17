@@ -57,7 +57,7 @@ class Game {
   removePlayer(socketId) {
     if (this.player1 !== null && this.player1.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
-      if (this.player2 == null) {
+      if (this.player2 === null) {
         this.endGame();
         this.gameState = "waiting";
       }
