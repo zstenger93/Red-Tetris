@@ -193,18 +193,18 @@ class Player {
     }
     for (
       let i = -1 * this.currentPiece.shape.length;
-      i >= this.currentPiece.shape.length;
-      i--
+      i < this.currentPiece.shape.length;
+      i++
     ) {
       if (
         !this.checkCollision(
           this.board,
           this.currentPiece.shape,
-          this.verticalPosition + i,
-          this.horizontalPosition
+          this.verticalPosition,
+          this.horizontalPosition + i
         )
       ) {
-        this.verticalPosition += i;
+        this.horizontalPosition += i;
         return true;
       }
     }
@@ -228,18 +228,18 @@ class Player {
 
     for (
       let i = -1 * this.currentPiece.shape.length;
-      i >= this.currentPiece.shape.length;
-      i--
+      i < this.currentPiece.shape.length;
+      i++
     ) {
       if (
         !this.checkCollision(
           this.board,
           this.currentPiece.shape,
-          this.verticalPosition + i,
-          this.horizontalPosition
+          this.verticalPosition,
+          this.horizontalPosition + i
         )
       ) {
-        this.verticalPosition += i;
+        this.horizontalPosition += i;
         return true;
       }
     }
