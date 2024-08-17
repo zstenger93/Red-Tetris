@@ -36,7 +36,7 @@ const httpServer = http.createServer(app);
 const PORT = process.env.WEBSERVER_PORT || 8000;
 const IP = process.env.IP || "localhost";
 httpServer.listen(PORT, () => {
-  console.log(`HTTP server listening on port ${PORT}`);
+  console.log(`Server on http://${IP}:${PORT}`);
 });
 
 module.exports = { app, httpServer };
