@@ -234,6 +234,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function autoJoinFromURL() {
+    const hash = window.location.hash;
+    if (hash) {
+      if (hash.slice(-1) !== "]") {
+        console.log("Invalid Url");
+        window.location.hash = "";
+        return;
+      }
+      const [room, player] = hash.slice(1).split("[");
+      if (room && player) {
+        const playerName = player.slice(0, -1);
+        const username = playerName;
+        navigateToGame(username, room);
+      }
+    }
+  }
+
   joinButton.addEventListener("click", () => {
     const username = document.getElementById("username").value;
     const room = document.getElementById("room").value;
@@ -242,12 +259,20 @@ document.addEventListener("DOMContentLoaded", () => {
       navigateToGame(username, room);
     } else {
       console.log("Please enter a username and room");
+      window.location.hash = "";
     }
   });
+
+  autoJoinFromURL();
 
   window.addEventListener("popstate", () => {
     const hash = window.location.hash;
     if (hash) {
+      if (hash.slice(-1) !== "]") {
+        console.log("Invalid Url");
+        window.location.hash = "";
+        return;
+      }
       const [room, player] = hash.slice(1).split("[");
       const playerName = player.slice(0, -1);
       navigateToGame(playerName, room);
