@@ -88,6 +88,15 @@ function createGameBoard(rows, cols) {
       tetrisDashBoard.appendChild(cell);
     }
     tetrisPanel.appendChild(tetrisDashBoard);
+    const text = document.createElement("p");
+    text.id = id + "Text";
+    text.textContent = "";
+    text.style.gridColumn = "1 / span 4";
+    text.style.color = "white";
+    text.style.border = "1px solid white";
+    text.style.textAlign = "center";
+    text.style.fontSize = "20px";
+    tetrisPanel.appendChild(text);
     if (id === "tetrisDashBoard1") {
       const button = document.createElement("button");
       button.id = "startButton";
@@ -174,6 +183,14 @@ function parseMessage(data, socket) {
       socket.emit("message", { message: "start" });
     });
   }
+  if (data.player1) {
+    const player1 = document.getElementById("tetrisDashBoard1Text");
+    player1.textContent = data.player1;
+  }
+  if (data.player2) {
+    const player2 = document.getElementById("tetrisDashBoard2Text");
+    player2.textContent = data.player2;
+  }
   if (data.message === "game_started") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "none";
@@ -199,12 +216,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const gameDiv = document.getElementById("game");
   const joinButton = document.getElementById("join");
 
-  let socket;
+  let socket = null;
 
   function navigateToGame(username, room) {
     homeDiv.classList.add("hidden");
     gameDiv.classList.remove("hidden");
     const serverUrl = `http://{{IP}}:{{PORT}}`;
+    if (socket !== null) return;
     socket = io(serverUrl);
 
     socket.on("connect", () => {
@@ -293,4 +311,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const playerName = player.slice(0, -1);
     navigateToGame(playerName, room);
   }
+
+  window.addEventListener("hashchange", function () {
+    if (socket) {
+      socket.disconnect();
+      socket = null;
+    }
+    window.location.reload();
+  });
+
+  window.addEventListener("beforeunload", function () {
+    if (socket) {
+      socket.disconnect();
+      socket = null;
+    }
+  });
 });
