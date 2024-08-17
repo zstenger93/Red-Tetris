@@ -191,21 +191,33 @@ class Player {
     ) {
       return true;
     }
-    for (
-      let i = -1 * this.currentPiece.shape.length;
-      i < this.currentPiece.shape.length;
-      i++
-    ) {
-      if (
-        !this.checkCollision(
-          this.board,
-          this.currentPiece.shape,
-          this.verticalPosition,
-          this.horizontalPosition + i
-        )
-      ) {
-        this.horizontalPosition += i;
-        return true;
+    if (this.horizontalPosition < collumnNames.length / 2) {
+      for (let i = 0; i < this.currentPiece.shape.length; i++) {
+        if (
+          !this.checkCollision(
+            this.board,
+            this.currentPiece.shape,
+            this.verticalPosition,
+            this.horizontalPosition + i
+          )
+        ) {
+          this.horizontalPosition += i;
+          return true;
+        }
+      }
+    } else {
+      for (let i = 0; i > -1 * this.currentPiece.shape.length; i--) {
+        if (
+          !this.checkCollision(
+            this.board,
+            this.currentPiece.shape,
+            this.verticalPosition,
+            this.horizontalPosition + i
+          )
+        ) {
+          this.horizontalPosition += i;
+          return true;
+        }
       }
     }
     this.currentPiece.reverseRotate();
@@ -215,32 +227,33 @@ class Player {
   reverseRotate() {
     if (this.currentPiece === null) return;
     this.currentPiece.reverseRotate();
-    if (
-      !this.checkCollision(
-        this.board,
-        this.currentPiece.shape,
-        this.verticalPosition,
-        this.horizontalPosition
-      )
-    ) {
-      return true;
-    }
-
-    for (
-      let i = -1 * this.currentPiece.shape.length;
-      i < this.currentPiece.shape.length;
-      i++
-    ) {
-      if (
-        !this.checkCollision(
-          this.board,
-          this.currentPiece.shape,
-          this.verticalPosition,
-          this.horizontalPosition + i
-        )
-      ) {
-        this.horizontalPosition += i;
-        return true;
+    if (this.horizontalPosition < collumnNames.length / 2) {
+      for (let i = 0; i < this.currentPiece.shape.length; i++) {
+        if (
+          !this.checkCollision(
+            this.board,
+            this.currentPiece.shape,
+            this.verticalPosition,
+            this.horizontalPosition + i
+          )
+        ) {
+          this.horizontalPosition += i;
+          return true;
+        }
+      }
+    } else {
+      for (let i = 0; i > -1 * this.currentPiece.shape.length; i--) {
+        if (
+          !this.checkCollision(
+            this.board,
+            this.currentPiece.shape,
+            this.verticalPosition,
+            this.horizontalPosition + i
+          )
+        ) {
+          this.horizontalPosition += i;
+          return true;
+        }
       }
     }
     this.currentPiece.rotate();
