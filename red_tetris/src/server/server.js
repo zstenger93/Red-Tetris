@@ -62,10 +62,13 @@ io.on("connection", (socket) => {
           games[user.room].player1.socketId
         );
         if (playerSocket) {
-          playerSocket.emit("message", {
-            message: "control_on",
-            player1: games[user.room].player1.name,
-          });
+          if (games[user.room].player2 === socket.id) {
+            games[user.room].endGame();
+            playerSocket.emit("message", {
+              message: "control_on",
+              player1: games[user.room].player1.name,
+            });
+          }
         }
       }
       if (Object.keys(games[user.room].listOfPeopleInRoom).length === 0) {

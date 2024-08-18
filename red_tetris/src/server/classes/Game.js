@@ -47,6 +47,25 @@ class Game {
     if (player.reverseRotate()) this.sendGameState();
   }
 
+  fillEmptyPlayerPosition() {
+    if (this.player1 === null) {
+      if (this.player2 !== null) {
+        this.player1 = this.player2;
+        this.player2 = null;
+      }
+    }
+    if (this.player2 === null) {
+      for (const [socketId, player] of Object.entries(
+        this.listOfPeopleInRoom
+      )) {
+        if (this.player1.socketId !== socketId) {
+          this.player2 = player;
+          break;
+        }
+      }
+    }
+  }
+
   addPlayer(name, socketId) {
     this.listOfPeopleInRoom[socketId] = new Player(name, socketId);
     if (this.player1 === null) this.player1 = this.listOfPeopleInRoom[socketId];
@@ -149,9 +168,6 @@ class Game {
     }, 600);
     this.gameInterval.push(gameInterval);
   }
-
-  listenToControls() {}
-
   endGame() {
     this.gameState = "ended";
     if (this.player2 !== null) {
@@ -175,7 +191,11 @@ class Game {
     this.gameInterval = [];
     this.gameState = "waiting";
     this.io.to(this.room).emit("message", { message: this.gameState });
-    this.io.to(this.room).emit("message", { message: "control_on" });
+    this.fillEmptyPlayerPosition();
+    this.fillEmptyPlayerPosition();
+    this.io
+      .to(this.player1.socketId)
+      .emit("message", { message: "control_on" });
   }
 }
 
