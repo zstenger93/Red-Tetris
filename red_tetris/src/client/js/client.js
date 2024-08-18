@@ -325,5 +325,6 @@ document.addEventListener("DOMContentLoaded", () => {
       socket.disconnect();
       socket = null;
     }
+    window.location.reload();
   });
 });

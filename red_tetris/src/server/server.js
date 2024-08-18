@@ -31,6 +31,18 @@ io.on("connection", (socket) => {
         });
       }
     }
+    if (games[room].player1 !== null && games[room].player2 !== null) {
+      io.to(room).emit("message", {
+        message: "connection",
+        player1: games[room].player1.name,
+        player2: games[room].player2.name,
+      });
+    } else if (games[room].player1 !== null) {
+      io.to(room).emit("message", {
+        message: "connection",
+        player1: games[room].player1.name,
+      });
+    }
   });
 
   function messageParser(room, username, data) {

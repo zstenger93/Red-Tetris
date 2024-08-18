@@ -193,9 +193,11 @@ class Game {
     this.io.to(this.room).emit("message", { message: this.gameState });
     this.fillEmptyPlayerPosition();
     this.fillEmptyPlayerPosition();
-    this.io
-      .to(this.player1.socketId)
-      .emit("message", { message: "control_on" });
+    if (this.player1 !== null) {
+      this.io
+        .to(this.player1.socketId)
+        .emit("message", { message: "control_on" });
+    }
   }
 }
 
