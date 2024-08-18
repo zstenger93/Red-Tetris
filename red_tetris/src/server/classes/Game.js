@@ -57,7 +57,7 @@ class Game {
   removePlayer(socketId) {
     if (this.player1 !== null && this.player1.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
-      if (this.player2 == null) {
+      if (this.player2 === null) {
         this.endGame();
         this.gameState = "waiting";
       }
@@ -162,10 +162,12 @@ class Game {
           : this.player2.name,
       });
     } else {
-      this.io.to(this.room).emit("message", {
-        message: this.gameState,
-        winner: this.player1.name,
-      });
+      if (this.player1 !== null) {
+        this.io.to(this.room).emit("message", {
+          message: this.gameState,
+          winner: this.player1.name,
+        });
+      }
     }
     for (let i = 0; i < this.gameInterval.length; i++) {
       clearInterval(this.gameInterval[i]);

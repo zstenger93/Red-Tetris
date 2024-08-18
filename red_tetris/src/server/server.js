@@ -18,14 +18,18 @@ var userSockets = {};
 // socket connection
 io.on("connection", (socket) => {
   socket.on("joinRoom", async ({ room, username }) => {
-    console.log(`User ${username} is joining room ${room}`);
     socket.join(room);
     userSockets[socket.id] = { room, username };
     if (!games[room]) games[room] = new Game(room, io);
     games[room].addPlayer(username, socket.id);
     if (games[room].player1 !== null && games[room].gameState === "waiting") {
       const playerSocket = io.sockets.sockets.get(games[room].player1.socketId);
-      playerSocket.emit("message", { message: "control_on" });
+      if (playerSocket) {
+        playerSocket.emit("message", {
+          message: "control_on",
+          player1: games[room].player1.name,
+        });
+      }
     }
   });
 
@@ -57,9 +61,15 @@ io.on("connection", (socket) => {
         const playerSocket = io.sockets.sockets.get(
           games[user.room].player1.socketId
         );
-        playerSocket.emit("message", { message: "control_on" });
+        if (playerSocket) {
+          playerSocket.emit("message", {
+            message: "control_on",
+            player1: games[user.room].player1.name,
+          });
+        }
       }
       if (Object.keys(games[user.room].listOfPeopleInRoom).length === 0) {
+        games[user.room].endGame();
         delete games[user.room];
         console.log("Room deleted");
       }
