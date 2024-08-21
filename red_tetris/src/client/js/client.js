@@ -84,7 +84,7 @@ function createGameBoard(rows, cols) {
       cell.style.width = "45px";
       cell.style.height = "45px";
       cell.classList.add("cell");
-      cell.id = `dashboard_cell_${i}`;
+      cell.id = `${id}_${collumnNames[i % 4]}${rowNames[Math.floor(i / 4)]}`;
       tetrisDashBoard.appendChild(cell);
     }
     tetrisPanel.appendChild(tetrisDashBoard);
@@ -157,6 +157,27 @@ function colorTheGameField(data) {
   }
 }
 
+function colorTheNextPiece(data) {
+  if (!data.player1NextPiece || data.player1NextPiece === "null") return;
+  for (let i = 0; i < data.player1NextPiece.length; i = i + 3) {
+    const cell = document.getElementById(
+      `tetrisDashBoard1_${data.player1NextPiece[i + 1]}${
+        data.player1NextPiece[i + 2]
+      }`
+    );
+    cell.style.backgroundColor = colorNames[data.player1NextPiece[i]];
+  }
+  if (!data.player2NextPiece || data.player2NextPiece === "null") return;
+  for (let i = 0; i < data.player2NextPiece.length; i = i + 3) {
+    const cell = document.getElementById(
+      `tetrisDashBoard2_${data.player2NextPiece[i + 1]}${
+        data.player2NextPiece[i + 2]
+      }`
+    );
+    cell.style.backgroundColor = colorNames[data.player2NextPiece[i]];
+  }
+}
+
 function drawOverlay(data) {
   if (!data.overlay1 || data.overlay1 === "null") return;
   for (let i = 0; i < data.overlay1.length; i = i + 3) {
@@ -175,7 +196,6 @@ function drawOverlay(data) {
 }
 
 function parseMessage(data, socket) {
-  console.log(data);
   if (data.message === "control_on") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "block";
@@ -200,6 +220,7 @@ function parseMessage(data, socket) {
     colorTheGameField(data);
     setTimeout(() => {}, 50);
     drawOverlay(data);
+    colorTheNextPiece(data);
   }
   if (data.message === "ended") {
     gameState = "ended";
@@ -246,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
           socket.emit("message", { message: "rotate" });
         }
         if (event.key === "s") {
-          socket.emit("message", { message: "reverse_rotate" });
+          socket.emit("message", { message: "move_down" });
         }
       }
     });
@@ -256,7 +277,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const hash = window.location.hash;
     if (hash) {
       if (hash.slice(-1) !== "]") {
-        console.log("Invalid Url");
         window.location.hash = "";
         return;
       }
@@ -276,7 +296,6 @@ document.addEventListener("DOMContentLoaded", () => {
       history.pushState(null, "", `/#${room}[${username}]`);
       navigateToGame(username, room);
     } else {
-      console.log("Please enter a username and room");
       window.location.hash = "";
     }
   });
@@ -287,7 +306,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const hash = window.location.hash;
     if (hash) {
       if (hash.slice(-1) !== "]") {
-        console.log("Invalid Url");
         window.location.hash = "";
         return;
       }
@@ -325,5 +343,6 @@ document.addEventListener("DOMContentLoaded", () => {
       socket.disconnect();
       socket = null;
     }
+    window.location.reload();
   });
 });

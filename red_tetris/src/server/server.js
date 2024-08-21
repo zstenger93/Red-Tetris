@@ -31,6 +31,18 @@ io.on("connection", (socket) => {
         });
       }
     }
+    if (games[room].player1 !== null && games[room].player2 !== null) {
+      io.to(room).emit("message", {
+        message: "connection",
+        player1: games[room].player1.name,
+        player2: games[room].player2.name,
+      });
+    } else if (games[room].player1 !== null) {
+      io.to(room).emit("message", {
+        message: "connection",
+        player1: games[room].player1.name,
+      });
+    }
   });
 
   function messageParser(room, username, data) {
@@ -42,7 +54,7 @@ io.on("connection", (socket) => {
     if (data === "move_left") games[room].moveLeft(socket.id);
     if (data === "move_right") games[room].moveRight(socket.id);
     if (data === "rotate") games[room].rotate(socket.id);
-    if (data === "reverse_rotate") games[room].reverseRotate(socket.id);
+    if (data === "move_down") games[room].moveDownOnce(socket.id);
   }
 
   // receive message
@@ -62,10 +74,13 @@ io.on("connection", (socket) => {
           games[user.room].player1.socketId
         );
         if (playerSocket) {
-          playerSocket.emit("message", {
-            message: "control_on",
-            player1: games[user.room].player1.name,
-          });
+          if (games[user.room].player2 === socket.id) {
+            games[user.room].endGame();
+            playerSocket.emit("message", {
+              message: "control_on",
+              player1: games[user.room].player1.name,
+            });
+          }
         }
       }
       if (Object.keys(games[user.room].listOfPeopleInRoom).length === 0) {

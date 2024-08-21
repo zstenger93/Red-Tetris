@@ -10,7 +10,6 @@ class Game {
     this.io = io;
     this.gameInterval = [];
     this.roomSeed = Math.floor(Math.random() * 1000);
-    console.log("Game created");
   }
 
   findPlayer(socketId) {
@@ -26,25 +25,55 @@ class Game {
   moveLeft(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    if (player.moveLeft()) this.sendGameState();
+    player.moveLeft();
+    this.sendGameState();
   }
 
   moveRight(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
     player.moveRight();
+    this.sendGameState();
   }
 
   rotate(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    if (player.rotate()) this.sendGameState();
+    player.rotate();
+    this.sendGameState();
+  }
+
+  moveDownOnce(socketId) {
+    const player = this.findPlayer(socketId);
+    if (player === null) return;
+    player.moveDown();
+    this.sendGameState();
   }
 
   reverseRotate(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    if (player.reverseRotate()) this.sendGameState();
+    player.reverseRotate();
+    this.sendGameState();
+  }
+
+  fillEmptyPlayerPosition() {
+    if (this.player1 === null) {
+      if (this.player2 !== null) {
+        this.player1 = this.player2;
+        this.player2 = null;
+      }
+    }
+    if (this.player2 === null) {
+      for (const [socketId, player] of Object.entries(
+        this.listOfPeopleInRoom
+      )) {
+        if (this.player1.socketId !== socketId) {
+          this.player2 = player;
+          break;
+        }
+      }
+    }
   }
 
   addPlayer(name, socketId) {
@@ -57,10 +86,8 @@ class Game {
   removePlayer(socketId) {
     if (this.player1 !== null && this.player1.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
-      if (this.player2 === null) {
-        this.endGame();
-        this.gameState = "waiting";
-      }
+      this.endGame();
+      this.gameState = "waiting";
       this.player1 = this.player2;
       this.player2 = null;
     }
@@ -110,6 +137,8 @@ class Game {
         overlay2: this.player2.returnOverlay(),
         player1: this.player1.name,
         player2: this.player2.name,
+        player1NextPiece: this.player1.returnNextPiece(),
+        player2NextPiece: this.player2.returnNextPiece(),
         list: this.listOfPeopleInRoom,
       });
     } else {
@@ -120,6 +149,7 @@ class Game {
         overlay2: "null",
         board2: "null",
         player1: this.player1.name,
+        player1NextPiece: this.player1.returnNextPiece(),
         list: this.listOfPeopleInRoom,
       });
     }
@@ -149,9 +179,6 @@ class Game {
     }, 600);
     this.gameInterval.push(gameInterval);
   }
-
-  listenToControls() {}
-
   endGame() {
     this.gameState = "ended";
     if (this.player2 !== null) {
@@ -175,7 +202,13 @@ class Game {
     this.gameInterval = [];
     this.gameState = "waiting";
     this.io.to(this.room).emit("message", { message: this.gameState });
-    this.io.to(this.room).emit("message", { message: "control_on" });
+    this.fillEmptyPlayerPosition();
+    this.fillEmptyPlayerPosition();
+    if (this.player1 !== null) {
+      this.io
+        .to(this.player1.socketId)
+        .emit("message", { message: "control_on" });
+    }
   }
 }
 
