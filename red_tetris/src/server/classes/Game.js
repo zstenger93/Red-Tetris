@@ -25,19 +25,22 @@ class Game {
   moveLeft(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    if (player.moveLeft()) this.sendGameState();
+    player.moveLeft();
+    this.sendGameState();
   }
 
   moveRight(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
     player.moveRight();
+    this.sendGameState();
   }
 
   rotate(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    if (player.rotate()) this.sendGameState();
+    player.rotate();
+    this.sendGameState();
   }
 
   moveDownOnce(socketId) {
@@ -50,7 +53,8 @@ class Game {
   reverseRotate(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    if (player.reverseRotate()) this.sendGameState();
+    player.reverseRotate();
+    this.sendGameState();
   }
 
   fillEmptyPlayerPosition() {
