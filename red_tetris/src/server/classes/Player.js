@@ -321,13 +321,20 @@ class Player {
 
   returnNextPiece() {
     let returnMessage = "";
-    for (let i = 0; i < this.nextPiece.shape.length; i++) {
-      for (let j = 0; j < this.nextPiece.shape[i].length; j++) {
-        returnMessage +=
-          this.nextPiece.shape[i][j] + collumnNames[j] + rowNames[i];
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (
+          j >= this.nextPiece.shape.length ||
+          i >= this.nextPiece.shape.length
+        ) {
+          returnMessage += 0 + collumnNames[j] + rowNames[i];
+        } else {
+          returnMessage +=
+            this.nextPiece.shape[i][j] + collumnNames[j] + rowNames[i];
+        }
       }
     }
-    return returnMessages;
+    return returnMessage;
   }
 
   checkLose() {

@@ -10,7 +10,6 @@ class Game {
     this.io = io;
     this.gameInterval = [];
     this.roomSeed = Math.floor(Math.random() * 1000);
-    console.log("Game created");
   }
 
   findPlayer(socketId) {
