@@ -84,7 +84,7 @@ function createGameBoard(rows, cols) {
       cell.style.width = "45px";
       cell.style.height = "45px";
       cell.classList.add("cell");
-      cell.id = `${id}_${collumnNames[i % 4]}${rowNames[Math.floor(i / cols)]}`;
+      cell.id = `${id}_${collumnNames[i % 4]}${rowNames[Math.floor(i / 4)]}`;
       tetrisDashBoard.appendChild(cell);
     }
     tetrisPanel.appendChild(tetrisDashBoard);
@@ -158,7 +158,6 @@ function colorTheGameField(data) {
 }
 
 function colorTheNextPiece(data) {
-  console.log(data.player1NextPiece);
   if (!data.player1NextPiece || data.player1NextPiece === "null") return;
   for (let i = 0; i < data.player1NextPiece.length; i = i + 3) {
     const cell = document.getElementById(

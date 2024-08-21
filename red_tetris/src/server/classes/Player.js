@@ -327,7 +327,7 @@ class Player {
           j >= this.nextPiece.shape.length ||
           i >= this.nextPiece.shape.length
         ) {
-          returnMessage += 0 + collumnNames[j] + rowNames[i];
+          returnMessage += "0" + collumnNames[j] + rowNames[i];
         } else {
           returnMessage +=
             this.nextPiece.shape[i][j] + collumnNames[j] + rowNames[i];
