@@ -76,10 +76,8 @@ class Game {
   removePlayer(socketId) {
     if (this.player1 !== null && this.player1.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
-      if (this.player2 === null) {
-        this.endGame();
-        this.gameState = "waiting";
-      }
+      this.endGame();
+      this.gameState = "waiting";
       this.player1 = this.player2;
       this.player2 = null;
     }
@@ -129,6 +127,8 @@ class Game {
         overlay2: this.player2.returnOverlay(),
         player1: this.player1.name,
         player2: this.player2.name,
+        player1NextPiece: this.player1.returnNextPiece(),
+        player2NextPiece: this.player2.returnNextPiece(),
         list: this.listOfPeopleInRoom,
       });
     } else {
@@ -139,6 +139,7 @@ class Game {
         overlay2: "null",
         board2: "null",
         player1: this.player1.name,
+        player1NextPiece: this.player1.returnNextPiece(),
         list: this.listOfPeopleInRoom,
       });
     }

@@ -319,6 +319,17 @@ class Player {
     return returnMessage;
   }
 
+  returnNextPiece() {
+    let returnMessage = "";
+    for (let i = 0; i < this.nextPiece.shape.length; i++) {
+      for (let j = 0; j < this.nextPiece.shape[i].length; j++) {
+        returnMessage +=
+          this.nextPiece.shape[i][j] + collumnNames[j] + rowNames[i];
+      }
+    }
+    return returnMessages;
+  }
+
   checkLose() {
     if (!this.isAlive) {
       return true;
