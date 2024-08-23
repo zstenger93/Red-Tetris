@@ -107,11 +107,13 @@ class Game {
       this.gameState = "waiting";
       this.player1 = null;
       this.fillEmptyPlayerPosition();
+      this.gameState = "waiting";
       this.endGame();
     }
     if (this.player2 !== null && this.player2.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
       this.player2 = null;
+      this.gameState = "waiting";
       this.endGame();
     } else {
       delete this.listOfPeopleInRoom[socketId];
@@ -157,6 +159,8 @@ class Game {
         player2: this.player2.name,
         player1NextPiece: this.player1.returnNextPiece(),
         player2NextPiece: this.player2.returnNextPiece(),
+        score1: `${this.player1.score}`,
+        score2: `${this.player2.score}`,
         list: this.listOfPeopleInRoom,
       });
     } else {
@@ -167,6 +171,7 @@ class Game {
         overlay2: "null",
         board2: "null",
         player1: this.player1.name,
+        score1: `${this.player1.score}`,
         player1NextPiece: this.player1.returnNextPiece(),
         list: this.listOfPeopleInRoom,
       });
@@ -183,11 +188,13 @@ class Game {
     this.io.to(this.room).emit("message", { message: this.gameState });
     const gameInterval = setInterval(() => {
       if (this.player1 && this.player1.checkLose()) {
+        this.gameState = "ended";
         this.endGame();
         return;
       }
       if (this.player2 !== null) {
         if (this.player2.checkLose()) {
+          this.gameState = "ended";
           this.endGame();
           return;
         }
@@ -197,24 +204,42 @@ class Game {
     }, 600);
     this.gameInterval.push(gameInterval);
   }
+
   endGame() {
-    this.gameState = "ended";
-    if (this.player2 !== null) {
-      this.io.to(this.room).emit("message", {
-        message: this.gameState,
-        winner: this.player1.checkLose()
-          ? this.player1.name
-          : this.player2.name,
-        player1: this.player1.name,
-        player2: this.player2.name,
-      });
-    } else {
-      if (this.player1 !== null) {
+    if (this.gameState === "ended") {
+      if (this.player2 !== null) {
         this.io.to(this.room).emit("message", {
           message: this.gameState,
-          winner: this.player1.name,
+          winner: this.player1.checkLose()
+            ? this.player2.name
+            : this.player1.name,
           player1: this.player1.name,
+          player2: this.player2.name,
         });
+      } else {
+        if (this.player1 !== null) {
+          this.io.to(this.room).emit("message", {
+            message: this.gameState,
+            winner: this.player1.name,
+            player1: this.player1.name,
+          });
+        }
+      }
+    } else {
+      this.gameState = "ended";
+      if (this.player2 !== null) {
+        this.io.to(this.room).emit("message", {
+          message: this.gameState,
+          player1: this.player1.name,
+          player2: this.player2.name,
+        });
+      } else {
+        if (this.player1 !== null) {
+          this.io.to(this.room).emit("message", {
+            message: this.gameState,
+            player1: this.player1.name,
+          });
+        }
       }
     }
     for (let i = 0; i < this.gameInterval.length; i++) {
@@ -232,6 +257,11 @@ class Game {
       });
     } else if (this.player1 !== null && this.player2 !== null) {
       {
+        this.io.to(this.player1.socketId).emit("message", {
+          message: "control_on",
+          player1: this.player1.name,
+          player2: this.player2.name,
+        });
         this.io.to(this.room).emit("message", {
           message: "connection",
           player1: this.player1.name,
