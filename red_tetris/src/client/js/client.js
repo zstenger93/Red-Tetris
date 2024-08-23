@@ -357,3 +357,13 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.reload();
   });
 });
+
+module.exports = {
+	createGameBoard,
+	removeGameBoard,
+	parseMessage,
+	colorTheGameField,
+	drawOverlay,
+	coolMode,
+	colorTheNextPiece,
+  };
