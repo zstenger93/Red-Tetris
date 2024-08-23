@@ -132,12 +132,23 @@ function coolMode(gridId) {
     }, delay);
   }
 
+  function clearDashBoard(id) {
+    for (let i = 0; i < 16; i++) {
+      colorCell(
+        `${id}_${collumnNames[i % 4]}${rowNames[Math.floor(i / 4)]}`,
+        "black"
+      );
+    }
+  }
+
   for (let i = 0; i < 20; i++) {
     for (let j = 0; j < 10; j++) {
       colorCell(`${gridId}${collumnNames[j]}${rowNames[i]}`, "black", delay);
       delay += delayIncrement;
     }
   }
+  clearDashBoard("tetrisDashBoard1");
+  clearDashBoard("tetrisDashBoard2");
 }
 
 function colorTheGameField(data) {
