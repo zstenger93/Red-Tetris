@@ -76,6 +76,15 @@ function createGameBoard(rows, cols) {
     tetrisDashBoard.style.display = "grid";
     tetrisDashBoard.style.gridTemplateColumns = "repeat(4, 1fr)";
     tetrisDashBoard.style.gridTemplateRows = "repeat(4, 1fr)";
+    const score = document.createElement("p");
+    score.id = id + "Score";
+    score.textContent = "Score: 0";
+    score.style.gridColumn = "1 / span 4";
+    score.style.color = "white";
+    score.style.border = "1px solid white";
+    score.style.textAlign = "center";
+    score.style.fontSize = "20px";
+    tetrisPanel.appendChild(score);
     tetrisDashBoard.classList.add("tetris", "dashboard");
     for (let i = 0; i < 16; i++) {
       const cell = document.createElement("div");
@@ -139,6 +148,8 @@ function coolMode(gridId) {
         "black"
       );
     }
+    const score = document.getElementById(`${id}Score`);
+    score.textContent = "Score: 0";
   }
   clearDashBoard("tetrisDashBoard1");
   clearDashBoard("tetrisDashBoard2");
@@ -206,7 +217,6 @@ function drawOverlay(data) {
 }
 
 function parseMessage(data, socket) {
-  console.log(data);
   if (data.message === "control_on") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "block";
@@ -226,6 +236,16 @@ function parseMessage(data, socket) {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "none";
   }
+  if (data.score1) {
+    console.log(data.score1);
+    const score = document.getElementById("tetrisDashBoard1Score");
+    score.textContent = `Score: ${data.score1}`;
+  }
+  if (data.score2) {
+    console.log(data.score1);
+    const score = document.getElementById("tetrisDashBoard2Score");
+    score.textContent = `Score: ${data.score2}`;
+  }
   if (data.message === "started") {
     gameState = "started";
     colorTheGameField(data);
@@ -235,6 +255,7 @@ function parseMessage(data, socket) {
   }
   if (data.message === "ended") {
     gameState = "ended";
+    if (data.winner) alert(`Game Over! ${data.winner} wins!`);
     coolMode("grid1");
     coolMode("grid2");
   }

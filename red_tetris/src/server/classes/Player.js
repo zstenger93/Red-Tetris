@@ -260,6 +260,25 @@ class Player {
     return false;
   }
 
+  tetrisScore(count) {
+    switch (count) {
+      case 1:
+        this.score += 100;
+        break;
+      case 2:
+        this.score += 300;
+        break;
+      case 3:
+        this.score += 800;
+        break;
+      case 4:
+        this.score += 1600;
+        break;
+      default:
+        this.score += 0;
+    }
+  }
+
   appendLines(count) {
     this.verticalPosition = -1;
     for (let i = 0; i < count; i++) {
@@ -272,7 +291,6 @@ class Player {
     if (this.currentPiece === null) {
       return null;
     }
-
     if (
       this.checkCollision(
         this.board,
@@ -288,6 +306,7 @@ class Player {
       this.generatePieces(this.seed);
       this.verticalPosition = -1;
       this.horizontalPosition = 4;
+      if (returnVal !== null) this.tetrisScore(returnVal);
       return returnVal;
     }
     this.verticalPosition += 1;
