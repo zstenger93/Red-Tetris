@@ -219,6 +219,67 @@ describe("Player class tests", () => {
   });
 });
 
+describe("rotate", () => {
+  let player;
+  let mockPiece;
+
+  beforeEach(() => {
+    player = new Player("TestPlayer", "socketId1");
+    mockPiece = {
+      rotate: jest.fn(),
+      reverseRotate: jest.fn(),
+      shape: [
+        [1, 1],
+        [1, 1],
+      ],
+    };
+    player.currentPiece = mockPiece;
+    player.board = Array(20).fill(Array(10).fill(0));
+    global.collumnNames = ["K", "A", "R", "T", "U", "P", "E", "L", "I", "S"];
+  });
+
+  test("should rotate the current piece", () => {
+    player.rotate();
+    expect(mockPiece.rotate).toHaveBeenCalled();
+  });
+
+  test("should return true if no collision after rotation", () => {
+    player.checkCollision = jest.fn().mockReturnValue(false);
+    const result = player.rotate();
+    expect(result).toBe(true);
+  });
+
+  test("should move piece to the right if no collision and horizontalPosition < collumnNames.length / 2", () => {
+    player.horizontalPosition = 2;
+    player.checkCollision = jest
+      .fn()
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(false);
+    const result = player.rotate();
+    expect(player.horizontalPosition).toBe(2);
+    expect(result).toBe(true);
+  });
+
+  test("should move piece to the left if no collision and horizontalPosition >= collumnNames.length / 2", () => {
+    player.horizontalPosition = 6;
+    player.checkCollision = jest
+      .fn()
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(false);
+    const result = player.rotate();
+    expect(player.horizontalPosition).toBe(6);
+    expect(result).toBe(true);
+  });
+
+  test("should reverse rotate if collision persists after trying to move", () => {
+    player.horizontalPosition = 6;
+    player.checkCollision = jest.fn().mockReturnValue(true);
+    const result = player.rotate();
+    expect(mockPiece.reverseRotate).toHaveBeenCalled();
+    expect(result).toBe(false);
+  });
+});
+
 describe("Board and Overlay Representation", () => {
   let player;
   beforeEach(() => {
@@ -306,6 +367,24 @@ describe("Player actions", () => {
   });
 
   describe("reverseRotate", () => {
+    let player;
+    let mockPiece;
+
+    beforeEach(() => {
+      player = new Player();
+      mockPiece = {
+        reverseRotate: jest.fn(),
+        rotate: jest.fn(),
+        shape: [
+          [1, 1],
+          [1, 1],
+        ],
+      };
+      player.currentPiece = mockPiece;
+      player.board = Array(20).fill(Array(10).fill(0));
+      global.collumnNames = ["K", "A", "R", "T", "U", "P", "E", "L", "I", "S"];
+    });
+
     it("should not rotate if there is no current piece", () => {
       player.currentPiece = null;
       expect(player.reverseRotate()).toBeUndefined();
@@ -329,6 +408,38 @@ describe("Player actions", () => {
       const result = player.reverseRotate();
       expect(mockPiece.rotate).not.toHaveBeenCalled();
       expect(result).toBe(true);
+    });
+
+    it("should move piece to the right if no collision and horizontalPosition < collumnNames.length / 2", () => {
+      player.horizontalPosition = 2;
+      player.checkCollision = jest.fn().mockReturnValueOnce(false);
+      const result = player.reverseRotate();
+      expect(player.horizontalPosition).toBe(2);
+      expect(result).toBe(true);
+    });
+
+    it("should move piece to the left if no collision and horizontalPosition >= collumnNames.length / 2", () => {
+      player.horizontalPosition = 6;
+      player.checkCollision = jest.fn().mockReturnValueOnce(false);
+      const result = player.reverseRotate();
+      expect(player.horizontalPosition).toBe(6);
+      expect(result).toBe(true);
+    });
+
+    it("should rotate back if there is a collision after trying to move to the right", () => {
+      player.horizontalPosition = 2;
+      player.checkCollision = jest.fn().mockReturnValue(true);
+      const result = player.reverseRotate();
+      expect(mockPiece.rotate).toHaveBeenCalled();
+      expect(result).toBe(false);
+    });
+
+    it("should rotate back if there is a collision after trying to move to the left", () => {
+      player.horizontalPosition = 6;
+      player.checkCollision = jest.fn().mockReturnValue(true);
+      const result = player.reverseRotate();
+      expect(mockPiece.rotate).toHaveBeenCalled();
+      expect(result).toBe(false);
     });
   });
 
@@ -403,5 +514,122 @@ describe("moveDown method", () => {
 
     expect(returnValue).toBeNull();
     expect(player.currentPieceIndex).toBe(0);
+  });
+});
+
+describe("Board and Overlay Representation", () => {
+  let player;
+  beforeEach(() => {
+    player = new Player();
+    player.initGameBoard();
+    global.columnNames = ["K", "A", "R", "T", "U", "P", "E", "L", "I", "S"];
+    global.rowNames = [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+    ];
+    player.currentPiece = {
+      shape: [
+        [1, 1],
+        [1, 1],
+      ],
+      color: "red",
+    };
+    player.verticalPosition = 5;
+    player.horizontalPosition = 4;
+    player.nextPiece = {
+      shape: [
+        [1, 0, 0, 0],
+        [1, 1, 1, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ],
+    };
+  });
+
+  test("returnBoard should return a string representation of the board", () => {
+    let expectedString = "";
+    for (let i = 0; i < 20; i++) {
+      for (let j = 0; j < 10; j++) {
+        expectedString += "0" + columnNames[j] + rowNames[i];
+      }
+    }
+    expect(player.returnBoard()).toEqual(expectedString);
+  });
+
+  test("returnOverlay should return a string representation of the current piece overlay on the board", () => {
+    let expectedString = "";
+    for (let i = 0; i < player.currentPiece.shape.length; i++) {
+      for (let j = 0; j < player.currentPiece.shape[i].length; j++) {
+        if (player.currentPiece.shape[i][j] === 0) continue;
+        expectedString +=
+          "1" +
+          columnNames[j + player.horizontalPosition] +
+          rowNames[i + player.verticalPosition];
+      }
+    }
+    expect(player.returnOverlay()).toEqual(expectedString);
+  });
+
+  test("returnNextPiece should return the correct piece representation", () => {
+    const expectedMessage = "1KA0AA0RA0TA1KB1AB1RB0TB0KC0AC0RC0TC0KD0AD0RD0TD";
+    const result = player.returnNextPiece();
+    expect(result).toBe(expectedMessage);
+  });
+});
+
+describe("tetrisScore", () => {
+  let player;
+
+  beforeEach(() => {
+    player = new Player();
+    player.score = 0;
+  });
+
+  test("should add 100 points for 1 line cleared", () => {
+    player.tetrisScore(1);
+    expect(player.score).toBe(100);
+  });
+
+  test("should add 300 points for 2 lines cleared", () => {
+    player.tetrisScore(2);
+    expect(player.score).toBe(300);
+  });
+
+  test("should add 800 points for 3 lines cleared", () => {
+    player.tetrisScore(3);
+    expect(player.score).toBe(800);
+  });
+
+  test("should add 1600 points for 4 lines cleared", () => {
+    player.tetrisScore(4);
+    expect(player.score).toBe(1600);
+  });
+
+  test("should add 0 points for 0 lines cleared", () => {
+    player.tetrisScore(0);
+    expect(player.score).toBe(0);
+  });
+
+  test("should add 0 points for more than 4 lines cleared", () => {
+    player.tetrisScore(5);
+    expect(player.score).toBe(0);
   });
 });

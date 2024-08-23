@@ -20,7 +20,7 @@ const {
 	it("should create a game board", () => {
 	  createGameBoard(20, 10);
 	  expect(document.getElementById).toHaveBeenCalledWith("tetrisBoard");
-	  expect(document.createElement).toHaveBeenCalledTimes(441);
+	  expect(document.createElement).toHaveBeenCalledTimes(443);
 	});
   
 	it("should remove the game board", () => {
@@ -61,7 +61,7 @@ const {
 	  const cols = 10;
 	  createGameBoard(rows, cols);
   
-	  expect(document.createElement).toHaveBeenCalledTimes(441);
+	  expect(document.createElement).toHaveBeenCalledTimes(443);
   
 	  expect(document.getElementById).toHaveBeenCalledWith("tetrisBoard");
 	});

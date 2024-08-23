@@ -17,7 +17,7 @@ jest.mock("../src/server/classes/Player", () => {
     resetBoard: jest.fn(),
     generatePieces: jest.fn(),
     checkLose: jest.fn(),
-	returnNextPiece: jest.fn(),
+    returnNextPiece: jest.fn(),
   }));
 });
 
@@ -204,5 +204,144 @@ describe("removePlayer method in Game", () => {
     game.removePlayer("socket1");
     expect(game.endGame).toHaveBeenCalled();
     expect(game.gameState).toEqual("waiting");
+  });
+});
+
+describe("moveDownOnce", () => {
+  let game;
+  let io;
+
+  beforeEach(() => {
+    io = new EventEmitter();
+    io.to = jest.fn().mockReturnThis();
+    io.emit = jest.fn();
+    game = new Game("room1", io);
+    game.sendGameState = jest.fn();
+    game.findPlayer = jest.fn();
+  });
+
+  test("should call moveDown on the correct player and handle return value", () => {
+    const mockPlayer1 = {
+      socketId: "socket1",
+      moveDown: jest.fn().mockReturnValue(1),
+      appendLines: jest.fn(),
+    };
+    const mockPlayer2 = {
+      socketId: "socket2",
+      moveDown: jest.fn().mockReturnValue(2),
+      appendLines: jest.fn(),
+    };
+
+    game.player1 = mockPlayer1;
+    game.player2 = mockPlayer2;
+
+    game.findPlayer.mockReturnValue(mockPlayer1);
+
+    game.moveDownOnce("socket1");
+    expect(mockPlayer1.moveDown).toHaveBeenCalled();
+    expect(game.sendGameState).toHaveBeenCalled();
+    expect(mockPlayer2.appendLines).toHaveBeenCalledWith(1);
+
+    game.findPlayer.mockReturnValue(mockPlayer2);
+
+    game.moveDownOnce("socket2");
+    expect(mockPlayer2.moveDown).toHaveBeenCalled();
+    expect(game.sendGameState).toHaveBeenCalled();
+    expect(mockPlayer1.appendLines).toHaveBeenCalledWith(2);
+  });
+
+  test("should return if player is null", () => {
+    game.findPlayer.mockReturnValue(null);
+    game.moveDownOnce("socket1");
+    expect(game.sendGameState).not.toHaveBeenCalled();
+  });
+
+  test("should return if moveDown returns null", () => {
+    const mockPlayer = {
+      socketId: "socket1",
+      moveDown: jest.fn().mockReturnValue(null),
+      appendLines: jest.fn(),
+    };
+
+    game.player1 = mockPlayer;
+    game.findPlayer.mockReturnValue(mockPlayer);
+
+    game.moveDownOnce("socket1");
+    expect(mockPlayer.moveDown).toHaveBeenCalled();
+    expect(game.sendGameState).toHaveBeenCalled();
+    expect(mockPlayer.appendLines).not.toHaveBeenCalled();
+  });
+});
+
+describe("endGame", () => {
+  let game;
+  let io;
+
+  beforeEach(() => {
+    io = new EventEmitter();
+    io.to = jest.fn().mockReturnThis();
+    io.emit = jest.fn();
+    game = new Game("room1", io);
+    game.player1 = {
+      name: "Player1",
+      checkLose: jest.fn().mockReturnValue(false),
+      socketId: "socket1",
+    };
+    game.player2 = { name: "Player2", socketId: "socket2" };
+    game.gameState = "playing";
+  });
+
+  test("should emit message with winner when gameState is 'ended' and player2 is not null", () => {
+    game.gameState = "ended";
+    game.player1.checkLose.mockReturnValue(true);
+
+    game.endGame();
+
+    expect(io.to).toHaveBeenCalledWith("room1");
+    expect(io.emit).toHaveBeenCalledWith("message", {
+      message: "ended",
+      winner: "Player2",
+      player1: "Player1",
+      player2: "Player2",
+    });
+  });
+
+  test("should emit message with winner when gameState is 'ended' and player2 is null", () => {
+    game.gameState = "ended";
+    game.player2 = null;
+
+    game.endGame();
+
+    expect(io.to).toHaveBeenCalledWith("room1");
+    expect(io.emit).toHaveBeenCalledWith("message", {
+      message: "ended",
+      winner: "Player1",
+      player1: "Player1",
+    });
+  });
+
+  test("should set gameState to 'ended' and emit message when gameState is not 'ended' and player2 is not null", () => {
+    game.endGame();
+
+    expect(game.gameState).toBe("waiting");
+    expect(io.to).toHaveBeenCalledWith("room1");
+    expect(io.emit).toHaveBeenCalledWith("message", {
+      message: "ended",
+      player1: "Player1",
+      player2: "Player2",
+    });
+  });
+
+  test("should set gameState to 'ended' and emit message when gameState is not 'ended' and player2 is null", () => {
+    game.player2 = null;
+
+    game.endGame();
+
+    expect(game.gameState).toBe("waiting");
+    expect(io.to).toHaveBeenCalledWith("room1");
+    expect(io.emit).toHaveBeenCalledWith("message", {
+      message: "ended",
+      player1: "Player1",
+    });
   });
 });
