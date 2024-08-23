@@ -58,6 +58,14 @@ class Game {
   }
 
   fillEmptyPlayerPosition() {
+    if (this.player1 === null && this.player2 === null) {
+      for (const [socketId, player] of Object.entries(
+        this.listOfPeopleInRoom
+      )) {
+        this.player1 = player;
+        break;
+      }
+    }
     if (this.player1 === null) {
       if (this.player2 !== null) {
         this.player1 = this.player2;
@@ -86,10 +94,10 @@ class Game {
   removePlayer(socketId) {
     if (this.player1 !== null && this.player1.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
-      this.endGame();
       this.gameState = "waiting";
-      this.player1 = this.player2;
-      this.player2 = null;
+      this.player1 = null;
+      this.fillEmptyPlayerPosition();
+      this.endGame();
     }
     if (this.player2 !== null && this.player2.socketId === socketId) {
       delete this.listOfPeopleInRoom[socketId];
@@ -164,7 +172,7 @@ class Game {
     if (this.player2 !== null) this.player2.generatePieces(this.roomSeed);
     this.io.to(this.room).emit("message", { message: this.gameState });
     const gameInterval = setInterval(() => {
-      if (this.player1.checkLose()) {
+      if (this.player1 && this.player1.checkLose()) {
         this.endGame();
         return;
       }
@@ -187,12 +195,15 @@ class Game {
         winner: this.player1.checkLose()
           ? this.player1.name
           : this.player2.name,
+        player1: this.player1.name,
+        player2: this.player2.name,
       });
     } else {
       if (this.player1 !== null) {
         this.io.to(this.room).emit("message", {
           message: this.gameState,
           winner: this.player1.name,
+          player1: this.player1.name,
         });
       }
     }
@@ -204,10 +215,19 @@ class Game {
     this.io.to(this.room).emit("message", { message: this.gameState });
     this.fillEmptyPlayerPosition();
     this.fillEmptyPlayerPosition();
-    if (this.player1 !== null) {
-      this.io
-        .to(this.player1.socketId)
-        .emit("message", { message: "control_on" });
+    if (this.player1 !== null && this.player2 === null) {
+      this.io.to(this.player1.socketId).emit("message", {
+        message: "control_on",
+        player1: this.player1.name,
+      });
+    } else if (this.player1 !== null && this.player2 !== null) {
+      {
+        this.io.to(this.room).emit("message", {
+          message: "connection",
+          player1: this.player1.name,
+          player2: this.player2.name,
+        });
+      }
     }
   }
 }

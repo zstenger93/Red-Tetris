@@ -123,7 +123,7 @@ function removeGameBoard() {
 
 function coolMode(gridId) {
   let delay = 0;
-  const delayIncrement = 30;
+  const delayIncrement = 5;
 
   function colorCell(cellId, color) {
     setTimeout(() => {
@@ -140,15 +140,14 @@ function coolMode(gridId) {
       );
     }
   }
-
+  clearDashBoard("tetrisDashBoard1");
+  clearDashBoard("tetrisDashBoard2");
   for (let i = 0; i < 20; i++) {
     for (let j = 0; j < 10; j++) {
       colorCell(`${gridId}${collumnNames[j]}${rowNames[i]}`, "black", delay);
       delay += delayIncrement;
     }
   }
-  clearDashBoard("tetrisDashBoard1");
-  clearDashBoard("tetrisDashBoard2");
 }
 
 function colorTheGameField(data) {
@@ -207,6 +206,7 @@ function drawOverlay(data) {
 }
 
 function parseMessage(data, socket) {
+  console.log(data);
   if (data.message === "control_on") {
     const startButton = document.getElementById("startButton");
     startButton.style.display = "block";
