@@ -272,7 +272,6 @@ class Player {
     if (this.currentPiece === null) {
       return null;
     }
-
     if (
       this.checkCollision(
         this.board,

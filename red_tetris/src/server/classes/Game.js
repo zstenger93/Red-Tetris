@@ -46,8 +46,18 @@ class Game {
   moveDownOnce(socketId) {
     const player = this.findPlayer(socketId);
     if (player === null) return;
-    player.moveDown();
+    let returnVal = player.moveDown();
     this.sendGameState();
+    if (returnVal === null) return;
+    if (player === null) return;
+    if (player.socketId === this.player1.socketId && this.player2 !== null) {
+      this.player2.appendLines(returnVal);
+      return;
+    }
+    if (this.player2 !== null && player.socketId === this.player2.socketId) {
+      this.player1.appendLines(returnVal);
+      return;
+    }
   }
 
   reverseRotate(socketId) {
