@@ -255,7 +255,7 @@ function parseMessage(data, socket) {
   }
   if (data.message === "ended") {
     gameState = "ended";
-    if (data.winner) alert(`Game Over! ${data.winner} wins!`);
+    if (data.winner) alert(`Game Over! ${data.winner}!`);
     coolMode("grid1");
     coolMode("grid2");
   }
@@ -380,11 +380,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 module.exports = {
-	createGameBoard,
-	removeGameBoard,
-	parseMessage,
-	colorTheGameField,
-	drawOverlay,
-	coolMode,
-	colorTheNextPiece,
-  };
+  createGameBoard,
+  removeGameBoard,
+  parseMessage,
+  colorTheGameField,
+  drawOverlay,
+  coolMode,
+  colorTheNextPiece,
+};

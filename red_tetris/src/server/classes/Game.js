@@ -211,8 +211,8 @@ class Game {
         this.io.to(this.room).emit("message", {
           message: this.gameState,
           winner: this.player1.checkLose()
-            ? this.player2.name
-            : this.player1.name,
+            ? `${this.player2.name} wins`
+            : `${this.player1.name} wins`,
           player1: this.player1.name,
           player2: this.player2.name,
         });
@@ -220,7 +220,7 @@ class Game {
         if (this.player1 !== null) {
           this.io.to(this.room).emit("message", {
             message: this.gameState,
-            winner: this.player1.name,
+            winner: `${this.player1.name} better luck next time! Your score was ${this.player1.score}`,
             player1: this.player1.name,
           });
         }
